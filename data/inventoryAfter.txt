@@ -1,0 +1,123 @@
+Name	Quantity	Value	Container
+1	Adapted Isis LLC 10 (L)	1	49.00 PED	CARRIED
+2	Adjusted Bukin's Spare Rifle	1	7.02 PED	CARRIED
+3	Adjusted Pixie Arm Guards (M)	1	4.20 PED	CARRIED
+4	Adjusted Pixie Foot Guards (M)	1	3.80 PED	CARRIED
+5	Adjusted Pixie Gloves (M)	1	3.80 PED	CARRIED
+6	Adjusted Pixie Harness (M)	1	5.80 PED	CARRIED
+7	Adjusted Pixie Helmet (M)	1	2.90 PED	CARRIED
+8	Adjusted Pixie Shin Guards (M)	1	3.90 PED	CARRIED
+9	Adjusted Pixie Thigh Guards (M)	1	4.20 PED	CARRIED
+10	Aeglic Ring Adjusted	1	9.98 PED	CARRIED
+11	Animal Eye Oil	9	3.45 PED	STORAGE (Calypso)
+12	Animal Hide	38	0.38 PED	STORAGE (Calypso)
+13	Animal Muscle Oil	864	48.92 PED	STORAGE (Calypso)
+14	Argonaut Skin	15	13.50 PED	STORAGE (Calypso)
+15	Armor Plating Mark.2A	1	4.90 PED	Adjusted Pixie Gloves (M) (5)
+16	Armor Plating Mark.2A	1	4.90 PED	Adjusted Pixie Shin Guards (M) (8)
+17	Armor Plating Mark.2A	1	4.90 PED	Adjusted Pixie Arm Guards (M) (3)
+18	Armor Plating Mark.2A	1	4.90 PED	Adjusted Pixie Helmet (M) (7)
+19	Armor Plating Mark.2A	1	4.90 PED	Adjusted Pixie Thigh Guards (M) (9)
+20	Armor Plating Mark.2A	1	4.90 PED	Adjusted Pixie Foot Guards (M) (4)
+21	Armor Plating Mark.2A	1	4.90 PED	Adjusted Pixie Harness (M) (6)
+22	Basic Filters Blueprint	1	0.02 PED	Component (Vol. I) (44)
+23	Basic Mineral Extractor	20	0.20 PED	STORAGE (Calypso)
+24	Basic Skin Color Set	1	0.11 PED	STORAGE (Calypso)
+25	Basic Stone Extractor	853	8.53 PED	STORAGE (Calypso)
+26	Basic Tube Blueprint	1	0.01 PED	Component (Vol. I) (44)
+27	Berycled Skin	2	0.60 PED	STORAGE (Calypso)
+28	Blazar Fragment	576	0.00 PED	STORAGE (Calypso)
+29	Bombardo	303	0.00 PED	STORAGE (Calypso)
+30	Brukite	15	0.00 PED	STORAGE (Calypso)
+31	CDF Scout Arm Guards (M)	1	0.40 PED	STORAGE (Calypso)
+32	CDF Scout Foot Guards (M)	1	0.10 PED	STORAGE (Calypso)
+33	CDF Scout Harness (M)	1	0.40 PED	STORAGE (Calypso)
+34	CDF Scout Shin Guards (M)	1	0.40 PED	STORAGE (Calypso)
+35	CDF Scout Thigh Guards (M)	1	0.40 PED	STORAGE (Calypso)
+36	Calypso Bone Sample (Mission Item)	98	0.00 PED	STORAGE (Calypso)
+37	Calypso Candy Cane	1	0.01 PED	STORAGE (Calypso)
+38	Calypso Elf Shoes (M)	1	0.98 PED	CARRIED
+39	Colonist Green Issue Jumpsuit (M)	1	0.10 PED	CARRIED
+40	Colonist Standard Issue Cap (M)	1	0.00 PED	CARRIED
+41	Combat Token	91	0.91 PED	STORAGE (Calypso)
+42	Combibo Skin	3	0.69 PED	STORAGE (Calypso)
+43	Common Dung	13	0.00 PED	STORAGE (Calypso)
+44	Component (Vol. I)	1	0.02 PED	STORAGE (Calypso)
+45	Daily Token	15	0.15 PED	STORAGE (Calypso)
+46	Diluted Mineral Extractor	21	0.21 PED	STORAGE (Calypso)
+47	EWE EP-1 Neutron (L)	1	0.05 PED	CARRIED
+48	EWE EP-2 Proton (L)	1	0.07 PED	CARRIED
+49	Earth Excavator ME/01	1	0.78 PED	CARRIED
+50	Falx	1	10.56 PED	CARRIED
+51	Finder F-101	1	5.50 PED	CARRIED
+52	Genesis Rookie Finder (L)	1	0.02 PED	STORAGE (Calypso)
+53	Genesis Rookie Refiner (L)	1	0.00 PED	STORAGE (Calypso)
+54	Genesis Star Basic Excavator (L)	1	3.00 PED	CARRIED
+55	Genesis Star Rookie Extractor (L)	1	0.10 PED	STORAGE (Calypso)
+56	Genesis Star Rookie Finder (L)	1	0.08 PED	STORAGE (Calypso)
+57	Gullaldr Shades (M)	1	0.42 PED	CARRIED
+58	Haimoros	14	0.00 PED	STORAGE (Calypso)
+59	Halloween Torch	1	0.01 PED	CARRIED
+60	Heart-shaped Pillow	1	0.01 PED	STORAGE (Calypso)
+61	Herb Box	1	3.78 PED	CARRIED
+62	Iron Stone	24	3.12 PED	STORAGE (Calypso)
+63	Isis LLC 2 Merry Edition (L)	1	3.48 PED	CARRIED
+64	Kobold Gloves (M)	1	2.34 PED	STORAGE (Calypso)
+65	Kobold Harness (F)	1	1.88 PED	STORAGE (Calypso)
+66	Kobold Harness (M)	1	3.09 PED	STORAGE (Calypso)
+67	MarCorp Kallous-6 CDF Edition (L)	1	0.02 PED	CARRIED
+68	Mind Essence	19800	1.98 PED	STORAGE (Calypso)
+69	Mk1 Explorer (L)	1	1.50 PED	CARRIED
+70	Molisk Tooth	207	2.07 PED	STORAGE (Calypso)
+71	Nissit	35	0.00 PED	STORAGE (Calypso)
+72	Nova Fragment	17266	0.17 PED	STORAGE (Calypso)
+73	Omegaton A104	1	23.78 PED	MarCorp Kallous-6 CDF Edition (L) (67)
+74	Omegaton B101 (L)	1	0.02 PED	CARRIED
+75	Paint Can (Blue)	4	0.20 PED	STORAGE (Calypso)
+76	Paint Can (Green)	17	1.19 PED	STORAGE (Calypso)
+77	Paint Can (Purple)	19	1.14 PED	STORAGE (Calypso)
+78	Paint Can (Yellow)	164	4.92 PED	STORAGE (Calypso)
+79	Papplon	411	0.00 PED	STORAGE (Calypso)
+80	Pixie Arm Guards (M)	1	2.10 PED	CARRIED
+81	Pixie Face Guard (M)	1	1.45 PED	CARRIED
+82	Pixie Face Guard (M)	1	0.79 PED	STORAGE (Calypso)
+83	Pixie Foot Guards (M)	1	1.90 PED	CARRIED
+84	Pixie Gloves (M)	1	1.90 PED	CARRIED
+85	Pixie Harness (M)	1	2.90 PED	CARRIED
+86	Pixie Shin Guards (M)	1	1.95 PED	CARRIED
+87	Pixie Thigh Guards (M)	1	2.10 PED	CARRIED
+88	Prancer Skin	1	0.30 PED	STORAGE (Calypso)
+89	Refiner MR100	1	0.66 PED	STORAGE (Calypso)
+90	Refiner MR100	1	1.97 PED	STORAGE (Calypso)
+91	Robot Alloy Armor Plate (L)	1	2.00 PED	STORAGE (Calypso)
+92	Robot Alloy Armor Plate (L)	1	1.99 PED	STORAGE (Calypso)
+93	Robot Alloy Armor Plate (L)	1	2.00 PED	STORAGE (Calypso)
+94	Robot Alloy Armor Plate (L)	1	1.99 PED	STORAGE (Calypso)
+95	Robot Alloy Armor Plate (L)	1	1.99 PED	STORAGE (Calypso)
+96	Robot Alloy Armor Plate (L)	1	1.99 PED	STORAGE (Calypso)
+97	Robot Alloy Armor Plate (L)	1	1.99 PED	STORAGE (Calypso)
+98	Robot Beacon (0110010101111010)	1	2.50 PED	STORAGE (Calypso)
+99	Rookie Laser Amp (L)	1	0.01 PED	CARRIED
+100	Rookie Weapon Cell	8772	0.87 PED	STORAGE (Calypso)
+101	Short Midastree Board	47	1.88 PED	STORAGE (Calypso)
+102	Short Stinktree Board	2	0.22 PED	STORAGE (Calypso)
+103	Shrapnel	1980198	198.01 PED	STORAGE (Calypso)
+104	Skildek P 30 (L)	1	0.80 PED	STORAGE (Calypso)
+105	Skumtomte Candy	4	0.04 PED	CARRIED
+106	Sleipnir Mk1 (C,L)	1	24.00 PED	CARRIED
+107	Snablesnot Skin	89	3.56 PED	STORAGE (Calypso)
+108	Socket I Component	72	7.20 PED	STORAGE (Calypso)
+109	Socket II Component	41	4.10 PED	STORAGE (Calypso)
+110	Soft Hide	130	13.00 PED	STORAGE (Calypso)
+111	Sollomate Rubio (L)	1	0.00 PED	CARRIED
+112	Thin Wool	85	21.25 PED	STORAGE (Calypso)
+113	Tier I Component	245	24.50 PED	AUCTION
+114	Tier II Component	30	4.20 PED	STORAGE (Calypso)
+115	Universal Ammo	622407	62.24 PED	CARRIED
+116	VSE Mk 1	1	0.00 PED	CARRIED
+117	Valkyrie T1 (C,L)	1	0.16 PED	CARRIED
+118	Vibrant Sweat	1269	0.01 PED	CARRIED
+119	Vivo Explorer (L)	1	0.00 PED	CARRIED
+120	Vivo S10	1	5.54 PED	CARRIED
+121	Vivo T1A (L)	1	6.99 PED	CARRIED
+122	Ziplex Z1 Seeker	1	0.26 PED	STORAGE (Calypso)

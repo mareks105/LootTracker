@@ -1,5 +1,6 @@
+package loottracker;
+
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,19 +9,20 @@ import java.util.List;
 import java.util.Map;
 
 public class MarkupHandler {
-	private Map<String, Double> markupTable = new HashMap<String, Double>();
+	private Map<String, Double> markupTable = new HashMap<>();
 	private Charset charset = Charset.forName("ISO-8859-1");
 	
 	public MarkupHandler(Path markupFile) {
 		try {
 			List<String> lines = Files.readAllLines(markupFile, this.charset);
-			for (String line : lines) {
-				String[] parts = line.split("\t");
-				String itemName = parts[0];
-				String markupString = parts[1];
-				Double markup = Double.parseDouble(markupString);
-				markupTable.put(itemName, markup);
-			}
+                        lines.stream()
+                                .map((line) -> line.split("\t"))
+                                .forEachOrdered((parts) -> {
+                            String itemName = parts[0];
+                            String markupString = parts[1];
+                            Double markup = Double.parseDouble(markupString);
+                            markupTable.put(itemName, markup);
+                    });
 		}
 		catch (IOException e) {
 			System.out.println("Inventory File not Found!");
@@ -37,4 +39,10 @@ public class MarkupHandler {
 			return 1;
 		}
 	}
+        
+        public void displayMarkup(){
+            markupTable.forEach((k, v) -> {
+                System.out.println(k + "\t" + v);
+            });
+        }
 }

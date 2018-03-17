@@ -18,12 +18,12 @@ public class LootTracker {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         InventoryParser inventoryParser = new InventoryParser();
 		Map<String, ArrayList<Item>> lootForHunt = inventoryParser.getInventoryChangesForHunt();
 		
 		MarkupHandler markupHandler = new MarkupHandler(
 				Paths.get("C:\\Users\\mege9\\Documents\\MyProjects\\LootTracker\\data", "markup_info.txt"));
     }
-    
+    */
 }

@@ -27,7 +27,7 @@ public abstract class Equipment extends Item {
 	}
 	
 	public double getDecayTT(double endValue) {
-		return endValue - this.valueTT;
+		return this.valueTT - endValue;
 	}
 	
 	public double getDecayWithMarkup() {
@@ -35,6 +35,6 @@ public abstract class Equipment extends Item {
 	}
 	
 	public double getDecayWithMarkup(double endValue) {
-		return (endValue - this.valueTT) * this.markup;
+		return getDecayTT(endValue) * this.markup;
 	}
 }

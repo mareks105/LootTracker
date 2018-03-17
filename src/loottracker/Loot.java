@@ -9,7 +9,7 @@ public class Loot extends Item {
 	}
 	
 	public void setSoldWithMarkup(double markup) {
-		this.markup = valueTT * markup;
+		this.markup = markup;
 		isSold = true;
 	}
 	

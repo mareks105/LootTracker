@@ -41,7 +41,6 @@ public class InventoryParser {
 					double valueAfter = l.getValue();
 					int compare = Double.compare(valueAfter, valueBefore);
 					if(compare > 0) {
-						System.out.println(compare);
 						val = valueAfter - valueBefore;
 						loot.add(new Loot(l.getName(), val));
 					}

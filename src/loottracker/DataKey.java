@@ -1,3 +1,5 @@
+package loottracker;
+
 
 public enum DataKey {
 		Ammo,
@@ -11,8 +13,7 @@ public enum DataKey {
                 ArmorDecayWithMarkup,
                 TotalDecayTT,
                 TotalDecayWithMarkup,
-		TotalCostTT,
-                TotalCostWithMarkup,
+		TotalCost,
 		TotalLootTT,
 		TotalLootWithMarkup,
 		ReturnTT,
