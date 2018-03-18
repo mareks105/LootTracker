@@ -8,7 +8,11 @@ package loottracker;
 import java.awt.CardLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Map;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -18,10 +22,12 @@ import javax.swing.table.TableRowSorter;
  */
 public class LootTrackerUI extends javax.swing.JFrame {
 
+    private LootTracker lootTracker;
     /**
      * Creates new form LootTrackerUI
      */
     public LootTrackerUI() {
+        this.lootTracker = new LootTracker();
         initComponents();
         //setupDataTable();
     }
@@ -45,7 +51,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
     private void showRunDetails(){
         int row = dataTable.getSelectedRow();
         if(row == -1){
-            JOptionPane.showMessageDialog(null, "No run selected", "Action Warning", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "No run selected", "Action Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         CardLayout card = (CardLayout)mainPanel.getLayout();
@@ -69,20 +75,21 @@ public class LootTrackerUI extends javax.swing.JFrame {
         runDetailsPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        equipmentTable = new javax.swing.JTable();
+        addEquipButton = new javax.swing.JButton();
+        removeEquipButton = new javax.swing.JButton();
+        saveEquipButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        editButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        mobSelector = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        newMobButton = new javax.swing.JButton();
         settingsPanel = new javax.swing.JPanel();
         totalDataPanel = new javax.swing.JPanel();
         totalCostLabel = new javax.swing.JLabel();
@@ -90,7 +97,6 @@ public class LootTrackerUI extends javax.swing.JFrame {
         totalMarkupLabel = new javax.swing.JLabel();
         returnTTLabel = new javax.swing.JLabel();
         returnMarkupPercentLabel = new javax.swing.JLabel();
-        totalCostField = new javax.swing.JFormattedTextField();
         totalLootTTField = new javax.swing.JFormattedTextField();
         totalMarkupField = new javax.swing.JFormattedTextField();
         returnTTField = new javax.swing.JFormattedTextField();
@@ -106,14 +112,15 @@ public class LootTrackerUI extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        armorField = new javax.swing.JTextField();
         healingField = new javax.swing.JTextField();
         ampField = new javax.swing.JTextField();
         weaponField = new javax.swing.JTextField();
+        armorField = new javax.swing.JTextField();
+        totalCostField = new javax.swing.JTextField();
         jButton7 = new javax.swing.JButton();
         detailsButton = new javax.swing.JButton();
         overviewButton = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        newRunButton = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -133,10 +140,10 @@ public class LootTrackerUI extends javax.swing.JFrame {
 
         dataTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Mob", "ID", "Cost", "LootTT", "Markup", "ResultTT", "ResultTT %", "Result MU", "ResultMU %", "Note"
+                "Mob", "ID", "Cost", "LootTT", "Markup", "ReturnTT", "ReturnTT %", "Return MU", "ReturnMU %", "Note"
             }
         ) {
             Class[] types = new Class [] {
@@ -171,17 +178,14 @@ public class LootTrackerUI extends javax.swing.JFrame {
         );
         overviewPanelLayout.setVerticalGroup(
             overviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(overviewPanelLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(474, Short.MAX_VALUE))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 601, Short.MAX_VALUE)
         );
 
         mainPanel.add(overviewPanel, "overview");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), "Equipment", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        equipmentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -197,18 +201,24 @@ public class LootTrackerUI extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(equipmentTable);
 
-        jButton1.setText("Add");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addEquipButton.setText("Add");
+        addEquipButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addEquipButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Remove");
+        removeEquipButton.setText("Remove");
+        removeEquipButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeEquipButtonActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Save");
+        saveEquipButton.setText("Save");
+        saveEquipButton.setEnabled(false);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), "Loot", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
 
@@ -223,6 +233,13 @@ public class LootTrackerUI extends javax.swing.JFrame {
             .addGap(0, 263, Short.MAX_VALUE)
         );
 
+        editButton.setText("Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -232,20 +249,23 @@ public class LootTrackerUI extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)
-                        .addComponent(jButton2)
+                        .addComponent(addEquipButton, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(editButton)
+                        .addGap(2, 2, 2)
+                        .addComponent(removeEquipButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(saveEquipButton, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(addEquipButton)
+                    .addComponent(removeEquipButton)
+                    .addComponent(saveEquipButton)
+                    .addComponent(editButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -277,13 +297,18 @@ public class LootTrackerUI extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("Ammo");
 
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        mobSelector.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        mobSelector.setToolTipText("");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("Mob");
 
-        jButton4.setText("New Mob");
+        newMobButton.setText("New Mob");
+        newMobButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newMobButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -297,9 +322,9 @@ public class LootTrackerUI extends javax.swing.JFrame {
                 .addGap(31, 31, 31)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(mobSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
+                .addComponent(newMobButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -309,9 +334,9 @@ public class LootTrackerUI extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(mobSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jButton4))
+                    .addComponent(newMobButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -373,13 +398,6 @@ public class LootTrackerUI extends javax.swing.JFrame {
         returnMarkupPercentLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         returnMarkupPercentLabel.setText("ReturnMU %");
 
-        totalCostField.setEditable(false);
-        totalCostField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                totalCostFieldActionPerformed(evt);
-            }
-        });
-
         totalLootTTField.setEditable(false);
 
         totalMarkupField.setEditable(false);
@@ -398,6 +416,12 @@ public class LootTrackerUI extends javax.swing.JFrame {
 
         returnMarkupField.setEditable(false);
 
+        groupSelector.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                groupSelectorItemStateChanged(evt);
+            }
+        });
+
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Mob");
 
@@ -413,13 +437,15 @@ public class LootTrackerUI extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel8.setText("Weapon");
 
-        armorField.setEditable(false);
-
         healingField.setEditable(false);
 
         ampField.setEditable(false);
 
         weaponField.setEditable(false);
+
+        armorField.setEditable(false);
+
+        totalCostField.setEditable(false);
 
         javax.swing.GroupLayout totalDataPanelLayout = new javax.swing.GroupLayout(totalDataPanel);
         totalDataPanel.setLayout(totalDataPanelLayout);
@@ -436,30 +462,24 @@ public class LootTrackerUI extends javax.swing.JFrame {
                         .addComponent(groupSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(totalDataPanelLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
                         .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(totalDataPanelLayout.createSequentialGroup()
-                                .addGap(67, 67, 67)
-                                .addComponent(totalCostField, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(totalDataPanelLayout.createSequentialGroup()
-                                .addGap(3, 3, 3)
                                 .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(totalDataPanelLayout.createSequentialGroup()
-                                        .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel7)
-                                            .addComponent(jLabel8)
-                                            .addComponent(jLabel6)
-                                            .addComponent(jLabel5))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(ampField, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(healingField)
-                                            .addComponent(weaponField)
-                                            .addGroup(totalDataPanelLayout.createSequentialGroup()
-                                                .addComponent(armorField, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 0, Short.MAX_VALUE))))
-                                    .addGroup(totalDataPanelLayout.createSequentialGroup()
-                                        .addComponent(totalCostLabel)
-                                        .addGap(0, 0, Short.MAX_VALUE)))))
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel5))
+                                .addGap(18, 18, 18)
+                                .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ampField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(healingField, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(weaponField, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(armorField, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(totalDataPanelLayout.createSequentialGroup()
+                                .addComponent(totalCostLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(totalCostField)))
                         .addGap(85, 85, 85)
                         .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(totalDataPanelLayout.createSequentialGroup()
@@ -468,7 +488,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
                                 .addComponent(totalMarkupField, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(totalDataPanelLayout.createSequentialGroup()
                                 .addComponent(totalLootLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                                 .addComponent(totalLootTTField, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(totalDataPanelLayout.createSequentialGroup()
                                 .addComponent(returnTTLabel)
@@ -484,7 +504,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
                                 .addComponent(returnTTpercentField, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, totalDataPanelLayout.createSequentialGroup()
                                 .addComponent(returnMarkupPercentLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(returnMarkupPercent, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(44, 44, 44))
         );
@@ -517,23 +537,24 @@ public class LootTrackerUI extends javax.swing.JFrame {
                 .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(returnMarkupLabel)
                     .addComponent(returnMarkupField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(armorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel5)
+                    .addComponent(armorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
                 .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(returnTTpercentField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(totalCostLabel)
+                    .addComponent(totalCostField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(returnTTPercentLabel)
-                    .addComponent(totalCostLabel))
+                    .addComponent(returnTTpercentField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(returnMarkupPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(returnMarkupPercentLabel)
-                    .addComponent(totalCostField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(598, 598, 598))
+                    .addComponent(returnMarkupPercentLabel))
+                .addGap(681, 681, 681))
         );
 
         jButton7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton7.setText("Settings");
+        jButton7.setEnabled(false);
 
         detailsButton.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         detailsButton.setText("Details");
@@ -551,8 +572,13 @@ public class LootTrackerUI extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton5.setText("New Run");
+        newRunButton.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        newRunButton.setText("New Run");
+        newRunButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newRunButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -568,7 +594,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(newRunButton, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(72, 72, 72)
                         .addComponent(totalDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -586,10 +612,10 @@ public class LootTrackerUI extends javax.swing.JFrame {
                             .addComponent(overviewButton)
                             .addComponent(detailsButton)
                             .addComponent(jButton7)
-                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(newRunButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(totalDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(totalDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 601, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -598,9 +624,16 @@ public class LootTrackerUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void addEquipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEquipButtonActionPerformed
+        String[] equipmentInput = EquipmentParser.getEquipmentInput(null, null, null, "100", null);
+        DefaultTableModel model = (DefaultTableModel) equipmentTable.getModel();
+        model.addRow(new Object[]{
+            equipmentInput[0], 
+            equipmentInput[1], 
+            equipmentInput[2], 
+            equipmentInput[3], 
+            equipmentInput[4]});
+    }//GEN-LAST:event_addEquipButtonActionPerformed
 
     private void overviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_overviewButtonActionPerformed
         CardLayout card = (CardLayout)mainPanel.getLayout();
@@ -611,11 +644,96 @@ public class LootTrackerUI extends javax.swing.JFrame {
         showRunDetails();
     }//GEN-LAST:event_detailsButtonActionPerformed
 
-    private void totalCostFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalCostFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_totalCostFieldActionPerformed
+    private void newRunButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRunButtonActionPerformed
+        new NewRunUI(this.lootTracker, this).setVisible(true);
+    }//GEN-LAST:event_newRunButtonActionPerformed
 
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        int row = equipmentTable.getSelectedRow();
+        if ( row == -1){
+            JOptionPane.showMessageDialog(null, "No equipment entry selected", "Action Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String[] equipmentInput = EquipmentParser.getEquipmentInput(
+                (String)equipmentTable.getValueAt(row, 0),
+                (String)equipmentTable.getValueAt(row, 1),
+                (String)equipmentTable.getValueAt(row, 2),
+                (String)equipmentTable.getValueAt(row, 3),
+                (String)equipmentTable.getValueAt(row, 4));
+        if(equipmentInput.length > 0){
+            DefaultTableModel model = (DefaultTableModel) equipmentTable.getModel();
+            model.setValueAt(equipmentInput[0], row, 0);
+            model.setValueAt(equipmentInput[1], row, 1);
+            model.setValueAt(equipmentInput[2], row, 2);
+            model.setValueAt(equipmentInput[3], row, 3);
+            model.setValueAt(equipmentInput[4], row, 4);
+        }
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void removeEquipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeEquipButtonActionPerformed
+        int row = equipmentTable.getSelectedRow();
+        if ( row == -1){
+            JOptionPane.showMessageDialog(null, "No equipment entry selected", "Action Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        DefaultTableModel model = (DefaultTableModel)equipmentTable.getModel();
+        model.removeRow(row);
+    }//GEN-LAST:event_removeEquipButtonActionPerformed
+
+    private void newMobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMobButtonActionPerformed
+        String newMob = JOptionPane.showInputDialog(null, "Name of Mob:");
+        this.mobSelector.addItem(newMob);
+        this.mobSelector.setSelectedItem(newMob);
+    }//GEN-LAST:event_newMobButtonActionPerformed
+
+    private void groupSelectorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_groupSelectorItemStateChanged
+        updateStatisticsPanel();
+    }//GEN-LAST:event_groupSelectorItemStateChanged
+
+    private void updateStatisticsPanel(){
+        Map<DataKey, Double> statsForGroup = this.lootTracker.getStatsForGroup((String)this.groupSelector.getSelectedItem());
+        this.weaponField.setText(statsForGroup.get(DataKey.WeaponDecayWithMarkup).toString());
+        this.ampField.setText(statsForGroup.get(DataKey.AmpDecayWithMarkup).toString());
+        this.healingField.setText(statsForGroup.get(DataKey.HealingDecayWithMarkup).toString());
+        this.armorField.setText(statsForGroup.get(DataKey.ArmorDecayWithMarkup).toString());
+        this.totalCostField.setText(statsForGroup.get(DataKey.TotalCost).toString());
+        this.totalLootTTField.setText(statsForGroup.get(DataKey.TotalLootTT).toString());
+        this.totalMarkupField.setText(statsForGroup.get(DataKey.Markup).toString());
+        this.returnTTField.setText(statsForGroup.get(DataKey.ReturnTT).toString());
+        this.returnMarkupField.setText(statsForGroup.get(DataKey.ReturnWithMarkup).toString());
+        this.returnTTpercentField.setText(statsForGroup.get(DataKey.ReturnTTpercent).toString());
+        this.returnMarkupPercent.setText(statsForGroup.get(DataKey.ReturnWithMarkupPercent).toString());    
+    }
     
+    public JComboBox<String> getGroupSelector(){
+        return this.groupSelector;
+    }
+    
+    public void addRunToDisplay(int runID, String group, Hunt hunt){
+        DefaultTableModel dataTableModel = (DefaultTableModel)dataTable.getModel();
+        Map<DataKey, Double> huntData = hunt.getDataForHunt(this.lootTracker.getMarkupHandler());
+        System.out.println(huntData.get(DataKey.TotalCost));
+        dataTableModel.addRow(new Object[]
+        {group,
+        runID,
+        huntData.get(DataKey.TotalCost),
+        huntData.get(DataKey.TotalLootTT),
+        huntData.get(DataKey.Markup),
+        huntData.get(DataKey.ReturnTT),
+        huntData.get(DataKey.ReturnTTpercent),
+        huntData.get(DataKey.ReturnWithMarkup),
+        huntData.get(DataKey.ReturnWithMarkupPercent),
+        hunt.getNote()});
+        DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel)this.groupSelector.getModel();
+        if(comboBoxModel.getIndexOf(group) == -1){
+            this.groupSelector.addItem(group);
+            this.groupSelector.setSelectedItem(group);
+        }
+        updateStatisticsPanel();
+    }
+    
+    
+                                           
     /**
      * @param args the command line arguments
      */
@@ -652,19 +770,16 @@ public class LootTrackerUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addEquipButton;
     private javax.swing.JTextField ampField;
     private javax.swing.JTextField armorField;
     private javax.swing.JTable dataTable;
     private javax.swing.JButton detailsButton;
+    private javax.swing.JButton editButton;
+    private javax.swing.JTable equipmentTable;
     private javax.swing.JComboBox<String> groupSelector;
     private javax.swing.JTextField healingField;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton7;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -681,12 +796,15 @@ public class LootTrackerUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JComboBox<String> mobSelector;
+    private javax.swing.JButton newMobButton;
+    private javax.swing.JButton newRunButton;
     private javax.swing.JButton overviewButton;
     private javax.swing.JPanel overviewPanel;
+    private javax.swing.JButton removeEquipButton;
     private javax.swing.JFormattedTextField returnMarkupField;
     private javax.swing.JLabel returnMarkupLabel;
     private javax.swing.JFormattedTextField returnMarkupPercent;
@@ -696,8 +814,9 @@ public class LootTrackerUI extends javax.swing.JFrame {
     private javax.swing.JLabel returnTTPercentLabel;
     private javax.swing.JFormattedTextField returnTTpercentField;
     private javax.swing.JPanel runDetailsPanel;
+    private javax.swing.JButton saveEquipButton;
     private javax.swing.JPanel settingsPanel;
-    private javax.swing.JFormattedTextField totalCostField;
+    private javax.swing.JTextField totalCostField;
     private javax.swing.JLabel totalCostLabel;
     private javax.swing.JPanel totalDataPanel;
     private javax.swing.JLabel totalLootLabel;

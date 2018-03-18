@@ -23,18 +23,18 @@ public abstract class Equipment extends Item {
 	}
 	
 	public double getDecayTT() {
-		return getDecayTT(this.endValue);
+		return Utilities.round(getDecayTT(this.endValue), 2);
 	}
 	
 	public double getDecayTT(double endValue) {
-		return this.valueTT - endValue;
+		return Utilities.round(this.valueTT - endValue,2);
 	}
 	
 	public double getDecayWithMarkup() {
-		return getDecayWithMarkup(this.endValue);
+		return Utilities.round(getDecayWithMarkup(this.endValue),2);
 	}
 	
 	public double getDecayWithMarkup(double endValue) {
-		return getDecayTT(endValue) * this.markup;
+		return Utilities.round(getDecayTT(endValue) * this.markup,2);
 	}
 }

@@ -16,6 +16,7 @@ public enum DataKey {
 		TotalCost,
 		TotalLootTT,
 		TotalLootWithMarkup,
+                Markup,
 		ReturnTT,
                 ReturnTTpercent,
 		ReturnWithMarkup,
