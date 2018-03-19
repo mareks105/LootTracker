@@ -3,15 +3,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/MobData.java</file>
             <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/MarkupHandler.java</file>
-            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/test/loottracker/MobDataTest.java</file>
             <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/DataKey.java</file>
+            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/Item.java</file>
             <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/Equipment.java</file>
+            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/LootParser.java</file>
             <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/LootTrackerUI.java</file>
-            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/test/loottracker/ItemTest.java</file>
+            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/HealingTool.java</file>
             <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/Loot.java</file>
             <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/Utilities.java</file>
+            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/Weapon.java</file>
+            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/UtilitiesUI.java</file>
+            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/Hunt.java</file>
+            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/MobData.java</file>
+            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/test/loottracker/MobDataTest.java</file>
+            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/EquipmentParser.java</file>
+            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/NewRunUI.java</file>
+            <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/test/loottracker/ItemTest.java</file>
             <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/test/loottracker/HuntTest.java</file>
             <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/src/loottracker/LootTracker.java</file>
             <file>file:/C:/Users/mege9/Documents/NetBeansProjects/LootTracker/test/loottracker/WeaponTest.java</file>

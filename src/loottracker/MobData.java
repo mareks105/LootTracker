@@ -32,11 +32,13 @@ public class MobData {
 	public Map<DataKey, Double> getDataForHunts(MarkupHandler markupHandler) {
                 Map<DataKey, Double> dataTable = new EnumMap<>(DataKey.class);
                 hunts.forEach((Integer ID, Hunt hunt) -> {
-                    hunt.getDataForHunt(markupHandler).forEach((DataKey k, Double v) -> {
-                        if(k != DataKey.ReturnTTpercent && k != DataKey.ReturnWithMarkupPercent){
-                            dataTable.merge(k, v, Double::sum);
-                        }
-                    });
+                    if(hunt.getEndDate() != null){
+                        hunt.getDataForHunt(markupHandler).forEach((DataKey k, Double v) -> {
+                            if(k != DataKey.ReturnTTpercent && k != DataKey.ReturnWithMarkupPercent){
+                                dataTable.merge(k, Utilities.round(v,2), Double::sum);
+                            }
+                        });
+                    }
                 });
                 dataTable.put(DataKey.ReturnTTpercent, 
                     Utilities.round(100 * dataTable.get(DataKey.TotalLootTT) / 

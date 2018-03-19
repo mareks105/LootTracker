@@ -3,9 +3,14 @@ package loottracker;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Utilities {
+
+    public static void roundData(Map<loottracker.DataKey, Double> dataTable) {
+        dataTable.replaceAll((k, v) -> round(v,2));
+    }
 	
     public static enum DataKey {
             HealingDecay,

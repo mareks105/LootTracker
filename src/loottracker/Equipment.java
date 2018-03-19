@@ -5,7 +5,6 @@ package loottracker;
  * @author mege9
  */
 public abstract class Equipment extends Item {
-	private double markup;
 	private double endValue;
 	
 	public Equipment(String name, double startValue, double markup) {
@@ -22,6 +21,10 @@ public abstract class Equipment extends Item {
 		this.endValue = endValue;
 	}
 	
+        public double getEndValue(){
+            return this.endValue;
+        }
+        
 	public double getDecayTT() {
 		return Utilities.round(getDecayTT(this.endValue), 2);
 	}

@@ -17,6 +17,25 @@ import javax.swing.JTextField;
  * @author mege9
  */
 public class EquipmentParser {
+    
+    public static String getTypeForEquipment(Equipment e){
+        if(e instanceof Weapon){
+            return "Weapon";
+        }
+        else if(e instanceof Amp){
+            return "Amp";
+        }
+        else if(e instanceof HealingTool){
+            return "Healing";
+        }
+        else if(e instanceof Armor){
+            return "Armor";
+        }
+        else{
+            return "";
+        }
+    }
+    
     public static String[] getEquipmentInput(String oldName, String oldType, String oldStart, String oldMarkup, String oldEnd){
         String[] types = {"Weapon", "Amp", "Healing", "Armor"};
         JComboBox<String> typeSelector = new JComboBox<>(types);

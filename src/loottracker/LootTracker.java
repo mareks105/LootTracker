@@ -6,7 +6,7 @@
 package loottracker;
 
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -45,11 +45,27 @@ public class LootTracker {
         }
         return ID;
     }
+    public MobData getMobData(String group){
+        return huntingData.get(group);
+    }
+    
+    public Hunt getHunt(String group, int ID){
+        return huntingData.get(group).getHunt(ID);
+    }
+    
+    public Map<DataKey, Double> getDataForHunt(String group, int ID){
+        return huntingData.get(group).getHunt(ID).getDataForHunt(markupHandler);
+    }
     
     public void updateHunt(String group, int ID, double ammo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note){
         huntingData.get(group).getHunt(ID).updateHunt(ammo, lootData, equipmentData, note, this.markupHandler);
     }
-
+    
+    
+    public void endHunt(String group, int ID){
+        huntingData.get(group).getHunt(ID).end(new Date());;
+    }
+    
     public Map<DataKey, Double> getStatsForGroup(String group) {
         return huntingData.get(group).getDataForHunts(markupHandler);
     }

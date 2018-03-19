@@ -6,6 +6,7 @@ public class Item {
 	
 	protected String name;
 	protected double valueTT;
+        protected double markup;
 	
 	public Item(String name, double valueTT) {
 		this.name = name;
@@ -18,6 +19,10 @@ public class Item {
 	
 	public double getValue() {
 		return this.valueTT;
+	}
+        
+        public double getMarkup() {
+		return this.markup;
 	}
 	
 	public void changeValue(double newValue) {

@@ -35,6 +35,8 @@ public class NewRunUI extends javax.swing.JFrame {
         for(int i = 0; i < comboBoxModel.getSize(); i++){
             this.mobSelector.addItem(comboBoxModel.getElementAt(i));
         }
+        UtilitiesUI.addRightClickDeselect(lootTable);
+        UtilitiesUI.addRightClickDeselect(equipmentTable);
     }
 
     /**
@@ -154,11 +156,11 @@ public class NewRunUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Name", "TT", "Markup"
+                "Name", "TT"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -349,13 +351,17 @@ public class NewRunUI extends javax.swing.JFrame {
     
     private void addEquipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEquipButtonActionPerformed
         String[] equipmentInput = EquipmentParser.getEquipmentInput(null, null, null, "100", null);
-        DefaultTableModel model = (DefaultTableModel) equipmentTable.getModel();
-        model.addRow(new Object[]{
-            equipmentInput[0], 
-            equipmentInput[1], 
-            equipmentInput[2], 
-            equipmentInput[3], 
-            equipmentInput[4]});
+        if(equipmentInput.length > 0){
+            DefaultTableModel model = (DefaultTableModel) equipmentTable.getModel();
+            model.addRow(new Object[]{
+                equipmentInput[0], 
+                equipmentInput[1], 
+                equipmentInput[2], 
+                equipmentInput[3], 
+                equipmentInput[4]}
+            );
+        }
+        
     }//GEN-LAST:event_addEquipButtonActionPerformed
 
     private void newMobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMobButtonActionPerformed
@@ -398,12 +404,14 @@ public class NewRunUI extends javax.swing.JFrame {
     }//GEN-LAST:event_removeEquipButtonActionPerformed
 
     private void addLootButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLootButtonActionPerformed
-        String[] lootInput = LootParser.getLootInput(null, null, "100");
-        DefaultTableModel model = (DefaultTableModel) lootTable.getModel();
-        model.addRow(new Object[]{
-        lootInput[0],
-        lootInput[1],
-        lootInput[2]});
+        String[] lootInput = LootParser.getLootInput(null, null);
+        if(lootInput.length > 0){
+            DefaultTableModel model = (DefaultTableModel) lootTable.getModel();
+            model.addRow(new Object[]{
+            lootInput[0],
+            lootInput[1]});
+        }
+        
     }//GEN-LAST:event_addLootButtonActionPerformed
 
     private void editLootButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLootButtonActionPerformed
@@ -414,8 +422,7 @@ public class NewRunUI extends javax.swing.JFrame {
         }
         String[] lootInput = LootParser.getLootInput(
                 (String)lootTable.getValueAt(row, 0),
-                (String)lootTable.getValueAt(row, 1),
-                (String)lootTable.getValueAt(row, 2));
+                (String)lootTable.getValueAt(row, 1));
         if(lootInput.length > 0){
             DefaultTableModel model = (DefaultTableModel) lootTable.getModel();
             model.setValueAt(lootInput[0], row, 0);
@@ -435,10 +442,14 @@ public class NewRunUI extends javax.swing.JFrame {
     }//GEN-LAST:event_removeLootButtonActionPerformed
 
     private void saveRunButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveRunButtonActionPerformed
-        // TODO add your handling code here:
+        saveDataForHunt(false);
     }//GEN-LAST:event_saveRunButtonActionPerformed
 
     private void endRunButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endRunButtonActionPerformed
+        saveDataForHunt(true);
+    }//GEN-LAST:event_endRunButtonActionPerformed
+    
+    private void saveDataForHunt(boolean end){
         DefaultTableModel equipmentTableModel = (DefaultTableModel)equipmentTable.getModel();
         Vector<Vector<String>> equipmentData = equipmentTableModel.getDataVector();
         DefaultTableModel lootTableModel = (DefaultTableModel)lootTable.getModel();
@@ -458,13 +469,14 @@ public class NewRunUI extends javax.swing.JFrame {
         int result = JOptionPane.showConfirmDialog(null, null, "Are you sure?", JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
         if(result == JOptionPane.YES_OPTION){
             Hunt hunt = new Hunt(ammo, lootData, equipmentData, note, lootTracker.getMarkupHandler());
-            hunt.end(new Date());
+            if(end){
+                hunt.end(new Date());
+            }
             int runID = this.lootTracker.addHuntToGroup(group, hunt);
             this.mainUI.addRunToDisplay(runID, group, hunt);
             this.setVisible(false);
         }
-    }//GEN-LAST:event_endRunButtonActionPerformed
-
+    }
     /**
      * @param args the command line arguments
      */

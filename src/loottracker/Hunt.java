@@ -5,8 +5,8 @@ import java.util.stream.DoubleStream;
 
 public class Hunt {
 
-    private ArrayList<Item> allLoot;
-    private ArrayList<Item> allEquipment;
+    private ArrayList<Loot> allLoot;
+    private ArrayList<Equipment> allEquipment;
     private Map<DataKey, Double> dataTable;
     private Date endDate;
     private String note;
@@ -32,19 +32,18 @@ public class Hunt {
         addEquipmentFromData(equipmentData);
         this.dataTable.put(DataKey.Ammo, ammo);
         this.note = note;
+        computeDecayForEquipment();
+        computeLootTT();
+        computeTotalCost();
+        computeReturnTT();
     }
 
     private void addLootFromData(Vector<Vector<String>> lootData, MarkupHandler markupHandler){
         lootData.forEach((Vector<String> item) -> {
             String name = item.elementAt(0);
             double valueTT = Double.parseDouble(item.elementAt(1));
-            double markup = Double.parseDouble(item.elementAt(2)) / 100.0;
-            markupHandler.addMarkup(name, markup);
             this.allLoot.add(new Loot(name, valueTT));
         });
-        if(! markupHandler.updateMarkupFile()){
-            throw new RuntimeException("Could not update the markup file");
-        }
     }
 
     private void addEquipmentFromData(Vector<Vector<String>> equipmentData){
@@ -80,38 +79,16 @@ public class Hunt {
             allEquipment.add(equipment);
     }
 
-    public ArrayList<Item> getEquipment(){
+    public ArrayList<Equipment> getEquipment(){
         return allEquipment;
-    }
-
-    public boolean removeEquipment(String name){
-            int index = Utilities.getItemIndex(allEquipment, name);
-            if(index != -1) {
-                    allEquipment.remove(index);
-                    return true;
-            }
-            else {
-                    return false;
-            }
     }
 
     public void addLoot(Loot loot) {
             allLoot.add(loot);
     }
 
-    public ArrayList<Item> getLoot(){
+    public ArrayList<Loot> getLoot(){
         return allLoot;
-    }
-
-    public boolean removeLoot(String name) {
-        int index = Utilities.getItemIndex(allLoot, name);
-        if(index != -1) {
-            allLoot.remove(index);
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 
     public void addData(DataKey key, double value){
@@ -160,14 +137,10 @@ public class Hunt {
             }
             else{
                 this.endDate = date;
-            }
-            computeDecayForEquipment();
-            computeLootTT();
-            computeTotalCost();
-            computeReturnTT();
+            }       
     }
 
-    public Date getDate(){
+    public Date getEndDate(){
         return this.endDate;
     }
 
