@@ -8,18 +8,27 @@ package loottracker;
 import java.awt.CardLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import DiskIO.DiskIO;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import java.security.InvalidKeyException;
+import java.text.ParseException;
 
 /**
  *
@@ -28,15 +37,46 @@ import javax.swing.table.TableRowSorter;
 public class LootTrackerUI extends javax.swing.JFrame {
 
     private LootTracker lootTracker;
+    private String oldGroupForDetailsPanel;
     private DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     /**
      * Creates new form LootTrackerUI
      */
-    public LootTrackerUI() {
+    public LootTrackerUI() throws InvalidFormatException, ParseException, InvalidKeyException {
         this.lootTracker = new LootTracker();
+        try {
+            this.lootTracker = DiskIO.loadDataFromFile(df);
+        } catch (IOException ex) {
+            System.out.println("Failed to load data");
+            ex.printStackTrace();
+        }
         initComponents();
-        setupDataTables();
-        setupTestCase();
+        initDataTables();
+        //setupTestCase();
+        displayDataFromLootTracker();
+    }
+    
+    private void displayDataFromLootTracker(){
+        this.lootTracker.getHuntingData().forEach((String group, MobData data) -> {
+            this.groupSelector.addItem(group);
+            this.mobSelector.addItem(group);
+            data.getHunts().forEach((Integer ID, Hunt hunt) -> {
+                DefaultTableModel dataTableModel = (DefaultTableModel)this.dataTable.getModel();
+                Map<DataKey, Double> huntData = hunt.getDataForHunt(this.lootTracker.getMarkupHandler());
+                dataTableModel.addRow(new Object[]{
+                    group,
+                    ID.toString(),
+                    huntData.get(DataKey.TotalCost).toString(),
+                    huntData.get(DataKey.TotalLootTT).toString(),
+                    huntData.get(DataKey.Markup).toString(),
+                    huntData.get(DataKey.ReturnTT).toString(),
+                    huntData.get(DataKey.ReturnTTpercent).toString(),
+                    huntData.get(DataKey.ReturnWithMarkup).toString(),
+                    huntData.get(DataKey.ReturnWithMarkupPercent).toString(),
+                    hunt.getNote()
+                });
+            });
+        });
     }
     
     private void setupTestCase(){
@@ -69,7 +109,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
         return new Hunt(25.0, lootData, equipmentData, "", this.lootTracker.getMarkupHandler());
     }
     
-    private void setupDataTables(){
+    private void initDataTables(){
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(dataTable.getModel());
         sorter.setSortsOnUpdates(true);
         dataTable.setRowSorter(sorter);
@@ -106,7 +146,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
     private void prepareDetailsPanel(int row){
         DefaultTableModel tableModel = (DefaultTableModel)this.dataTable.getModel();
         String group = (String)tableModel.getValueAt(row, 0);
-        int runID = (int)tableModel.getValueAt(row, 1);
+        int runID = Integer.parseInt((String)tableModel.getValueAt(row, 1));
         Hunt hunt = this.lootTracker.getMobData(group).getHunt(runID);
         String note = hunt.getNote();
         double ammo = hunt.getAmmo();
@@ -117,6 +157,8 @@ public class LootTrackerUI extends javax.swing.JFrame {
         addEquipmentToTable(equipment);
         addLootToTable(loot);
         this.mobSelector.setSelectedItem(group);
+        this.dateField.setText(this.df.format(hunt.getEndDate()));
+        this.oldGroupForDetailsPanel = group;
     }
     
     private void addEquipmentToTable(ArrayList<Equipment> equipment){
@@ -154,7 +196,6 @@ public class LootTrackerUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jFrame1 = new javax.swing.JFrame();
         mainPanel = new javax.swing.JPanel();
         overviewPanel = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -219,19 +260,13 @@ public class LootTrackerUI extends javax.swing.JFrame {
         newRunButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
 
-        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
-        jFrame1.getContentPane().setLayout(jFrame1Layout);
-        jFrame1Layout.setHorizontalGroup(
-            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jFrame1Layout.setVerticalGroup(
-            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Overview");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                ActionOnWindowClosing(evt);
+            }
+        });
 
         mainPanel.setLayout(new java.awt.CardLayout());
 
@@ -894,6 +929,21 @@ public class LootTrackerUI extends javax.swing.JFrame {
     private void endRunButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endRunButtonActionPerformed
         saveDataForHunt(true);        
     }//GEN-LAST:event_endRunButtonActionPerformed
+
+    private void ActionOnWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_ActionOnWindowClosing
+        JFrame frame = (JFrame)evt.getComponent();
+        if(JOptionPane.showConfirmDialog(frame, 
+                "Are you sure?", "Confirm Close", JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+            try {
+                DiskIO.saveLootTracker(this.lootTracker, df);
+                System.exit(0);
+            } catch (IOException ex) {
+                System.out.println("Failed to save data: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_ActionOnWindowClosing
     
     private void saveDataForHunt(boolean end){
         DefaultTableModel equipmentTableModel = (DefaultTableModel)equipmentTable.getModel();
@@ -903,7 +953,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
         
         DefaultTableModel dataTableModel = (DefaultTableModel)this.dataTable.getModel();
         int row = dataTable.getSelectedRow();
-        int ID = (int)dataTableModel.getValueAt(row, 1);
+        int ID = Integer.parseInt((String)dataTableModel.getValueAt(row, 1));
         
         double ammo;
         
@@ -915,23 +965,31 @@ public class LootTrackerUI extends javax.swing.JFrame {
             return;
         }
         
-        String group = (String)this.mobSelector.getSelectedItem();
+        String newGroup = (String)this.mobSelector.getSelectedItem();
         String note = this.noteField.getText();
         int result = JOptionPane.showConfirmDialog(null, null, "Are you sure?", JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
         if(result == JOptionPane.YES_OPTION){
-            this.lootTracker.updateHunt(group, ID, ammo, lootData, equipmentData, note); 
-            Map<DataKey, Double> huntData = this.lootTracker.getDataForHunt(group, ID);
-            updateDataTableRow(dataTableModel, row, huntData);
+            if(newGroup != this.oldGroupForDetailsPanel){
+                this.lootTracker.changeGroupForHunt(newGroup, this.oldGroupForDetailsPanel, ID);
+                if(! this.lootTracker.getHuntingData().containsKey(this.oldGroupForDetailsPanel)){
+                    this.groupSelector.removeItem(this.oldGroupForDetailsPanel);
+                    this.groupSelector.setSelectedItem(newGroup);
+                }
+            }
+            this.lootTracker.updateHunt(newGroup, ID, ammo, lootData, equipmentData, note); 
+            Map<DataKey, Double> huntData = this.lootTracker.getDataForHunt(newGroup, ID);
+            updateDataTableRow(dataTableModel, row, newGroup, huntData);
             updateStatisticsPanel();
             if(end){
-                this.lootTracker.endHunt(group, ID);
+                this.lootTracker.endHunt(newGroup, ID);
             }
             CardLayout card = (CardLayout)mainPanel.getLayout();
             card.show(mainPanel, "overview"); 
         }
     }
     
-    private void updateDataTableRow(DefaultTableModel dataTableModel, int row, Map<DataKey, Double> huntData){
+    private void updateDataTableRow(DefaultTableModel dataTableModel, int row, String group, Map<DataKey, Double> huntData){
+        dataTableModel.setValueAt(group, row, 0);
         dataTableModel.setValueAt(huntData.get(DataKey.TotalCost).toString(), row, 2);
         dataTableModel.setValueAt(huntData.get(DataKey.TotalLootTT).toString(), row, 3);
         dataTableModel.setValueAt(huntData.get(DataKey.Markup).toString(), row, 4);
@@ -999,8 +1057,14 @@ public class LootTrackerUI extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                new LootTrackerUI().setVisible(true);
+                try {
+                    new LootTrackerUI().setVisible(true);
+                } catch (InvalidFormatException | ParseException | InvalidKeyException ex) {
+                    System.out.println("Invalid Json file with data!");
+                    ex.printStackTrace();
+                }
             }
         });
     }
@@ -1021,7 +1085,6 @@ public class LootTrackerUI extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> groupSelector;
     private javax.swing.JTextField healingField;
     private javax.swing.JButton jButton7;
-    private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

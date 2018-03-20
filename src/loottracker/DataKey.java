@@ -20,5 +20,7 @@ public enum DataKey {
 		ReturnTT,
                 ReturnTTpercent,
 		ReturnWithMarkup,
-                ReturnWithMarkupPercent
+                ReturnWithMarkupPercent;
+                
+    
 }

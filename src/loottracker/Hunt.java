@@ -1,5 +1,6 @@
 package loottracker;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.*;
 import java.util.stream.DoubleStream;
 
@@ -17,12 +18,30 @@ public class Hunt {
         initDataTable();
         updateHunt(ammo, lootData, equipmentData, note, markupHandler);
     }
-
+    
+    public Hunt(){
+        this.endDate = null;
+        initDataTable();
+        allLoot = new ArrayList<>();
+        allEquipment = new ArrayList<>();
+    }
+    
     private void initDataTable(){
         this.dataTable = new EnumMap<>(DataKey.class);
         for (DataKey key : DataKey.values()){
             this.dataTable.put(key, 0.0);
         }
+    }
+    
+    public Map<DataKey, Double> getDataTable(){
+        return this.dataTable;
+    }
+    
+    public void computeDataForHunt(){
+        computeDecayForEquipment();
+        computeLootTT();
+        computeTotalCost();
+        computeReturnTT();
     }
     
     public void updateHunt(double ammo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note, MarkupHandler markupHandler){
@@ -217,6 +236,10 @@ public class Hunt {
     
     public String getNote(){
         return this.note;
+    }
+    
+    public void setNote(String note){
+        this.note = note;
     }
     
     private void getReturnWithMarkup(){

@@ -5,37 +5,65 @@
  */
 package loottracker;
 
-import java.nio.file.Paths;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
+import DiskIO.DiskIO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author mege9
  */
 public class LootTracker {
-
     private Map<String, MobData> huntingData;
     private MarkupHandler markupHandler;
-    // Unique integer ID for every hunt created since the beginning of the program.
-    // TODO: Save this to the data file so new hunts get unique ids compared to those saved to disk
     private int huntsCreated;
 
     public LootTracker() {
         huntsCreated = 0;
         huntingData = new HashMap<>();
-        markupHandler = new MarkupHandler(Paths.get("C:\\Users\\mege9\\Documents\\NetBeansProjects\\LootTracker\\data\\markup_info.txt"));
+        //markupHandler = new MarkupHandler(Settings.markupFile);
+        
+    }
+    
+    public void addMarkupHandler(MarkupHandler markupHandler){
+        this.markupHandler = markupHandler;
+    }
+    
+    public int getHuntsCreated(){
+        return huntsCreated;
+    }
+    
+    public Set<String> getGroups(){
+        return huntingData.keySet();
     }
 
     public MarkupHandler getMarkupHandler(){
         return this.markupHandler;
     }
     
-    public int addHuntToGroup(String group, Hunt hunt) {
+    public Map<String, MobData> getHuntingData(){
+        return this.huntingData;
+    }
+    
+    public int addHuntToGroup(String group, Hunt hunt){
         huntsCreated++;
         int ID = huntsCreated;
+        return this.addHuntToGroup(group, hunt, ID);
+    }
+    
+    public int addHuntToGroup(String group, Hunt hunt, int ID) {
         if (huntingData.containsKey(group)) {
             huntingData.get(group).addHunt(ID, hunt);
         } else {
@@ -45,12 +73,26 @@ public class LootTracker {
         }
         return ID;
     }
+    
+    public void changeGroupForHunt(String newGroup, String oldGroup, int ID){
+        Hunt hunt = this.getHunt(oldGroup, ID);
+        this.removeHunt(oldGroup, ID);
+        this.addHuntToGroup(newGroup, hunt, ID);
+        if(huntingData.get(oldGroup).getHunts().size() == 0){
+            huntingData.remove(oldGroup);
+        }
+    }
+    
     public MobData getMobData(String group){
         return huntingData.get(group);
     }
     
     public Hunt getHunt(String group, int ID){
         return huntingData.get(group).getHunt(ID);
+    }
+    
+    public void removeHunt(String group, int ID){
+        this.huntingData.get(group).removeHunt(ID);
     }
     
     public Map<DataKey, Double> getDataForHunt(String group, int ID){
@@ -69,15 +111,5 @@ public class LootTracker {
     public Map<DataKey, Double> getStatsForGroup(String group) {
         return huntingData.get(group).getDataForHunts(markupHandler);
     }
-    /**
-     * @param args the command line arguments
-     */
-    /*public static void main(String[] args) {
-        InventoryParser inventoryParser = new InventoryParser();
-		Map<String, ArrayList<Item>> lootForHunt = inventoryParser.getInventoryChangesForHunt();
-		
-		MarkupHandler markupHandler = new MarkupHandler(
-				Paths.get("C:\\Users\\mege9\\Documents\\MyProjects\\LootTracker\\data", "markup_info.txt"));
-    }
-     */
 }
+

@@ -2,6 +2,7 @@ package loottracker;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -12,16 +13,49 @@ public class Utilities {
         dataTable.replaceAll((k, v) -> round(v,2));
     }
 	
-    public static enum DataKey {
-            HealingDecay,
-            Ammo,
-            AmpDecay,
-            WeaponDecay,
-            TotalCost,
-            TotalLootTT,
-            TotalLootWithMarkup,
-            ReturnTT,
-            ReturnWithMarkup
+    public static DataKey getDataKey(String key) throws InvalidKeyException{
+        switch(key){
+            case "Ammo":
+                return DataKey.Ammo;
+            case "AmpDecayTT":
+                return DataKey.AmpDecayTT;
+            case "AmpDecayWithMarkup":
+                return DataKey.AmpDecayWithMarkup;
+            case "WeaponDecayTT":
+                return DataKey.WeaponDecayTT;
+            case "WeaponDecayWithMarkup":
+                return DataKey.WeaponDecayWithMarkup;
+            case "HealingDecayTT":
+                return DataKey.HealingDecayTT;
+            case "HealingDecayWithMarkup":
+                return DataKey.HealingDecayWithMarkup;
+            case "ArmorDecayTT":
+                return DataKey.ArmorDecayTT;
+            case "ArmorDecayWithMarkup":
+                return DataKey.ArmorDecayWithMarkup;
+            case "TotalDecayTT":
+                return DataKey.TotalDecayTT;
+            case "TotalDecayWithMarkup":
+                return DataKey.TotalDecayWithMarkup;
+            case "TotalCost":
+                return DataKey.TotalCost;
+            case "TotalLootTT":
+                return DataKey.TotalLootTT;
+            case "TotalLootWithMarkup":
+                return DataKey.TotalLootWithMarkup;
+            case "Markup":
+                return DataKey.Markup;
+            case "ReturnTT":
+                return DataKey.ReturnTT;
+            case "ReturnTTpercent":
+                return DataKey.ReturnTTpercent;
+            case "ReturnWithMarkup":
+                return DataKey.ReturnWithMarkup;
+            case "ReturnWithMarkupPercent":
+                return DataKey.ReturnWithMarkupPercent;
+            default:
+                throw new InvalidKeyException("unknown data key: " + key);
+        }
     }
 
     public static double round(double value, int places) {

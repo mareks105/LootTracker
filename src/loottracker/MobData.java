@@ -1,5 +1,6 @@
 package loottracker;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,10 @@ public class MobData {
             else{
                 return false;
             }
+        }
+        
+        public Map<Integer, Hunt> getHunts(){
+            return hunts;
         }
         
         public Hunt getHunt(int ID){

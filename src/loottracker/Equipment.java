@@ -6,6 +6,7 @@ package loottracker;
  */
 public abstract class Equipment extends Item {
 	private double endValue;
+        protected EquipmentType type;
 	
 	public Equipment(String name, double startValue, double markup) {
 		this(name, startValue, markup, 0.0);
@@ -17,6 +18,10 @@ public abstract class Equipment extends Item {
 		this.endValue = endValue;
 	}
 	
+        public EquipmentType getType(){
+            return this.type;
+        }
+        
 	public void setEndValue(double endValue) {
 		this.endValue = endValue;
 	}
