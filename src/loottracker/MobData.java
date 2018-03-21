@@ -1,17 +1,33 @@
 package loottracker;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MobData {
 	private Map<Integer, Hunt> hunts;
-
+        private ArrayList<String> reportedLootForMob = new ArrayList<>();
 	public MobData() {
                 hunts = new HashMap<>();
 	}
 
+        public void addLootForGroup(ArrayList<Loot> loot){
+            loot.forEach((Loot l) -> {
+                if(! reportedLootForMob.contains(l.getName())){
+                    reportedLootForMob.add(l.getName());
+                }
+            });
+        }
+        
+        public ArrayList<String> getReportedLootForGroup(){
+            return this.reportedLootForMob;
+        }
+        
+        public void setReportedLootForGroup(ArrayList<String> lootNames){
+            this.reportedLootForMob = lootNames;
+        }
+        
         public void addHunt(int ID, Hunt hunt){
             hunts.put(ID, hunt);
         }

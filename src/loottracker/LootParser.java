@@ -6,6 +6,10 @@
 package loottracker;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,26 +21,48 @@ import javax.swing.JTextField;
  * @author mege9
  */
 public class LootParser {
-    public static String[] getLootInput(String oldName, String oldValue){
-        JTextField nameField = new JTextField(oldName);
+    public static String[] getLootInput(ArrayList<String> reportedLoot, String oldName, String oldValue){
+        JComboBox nameSelector;
+        if(reportedLoot.size() == 0){
+            nameSelector = new JComboBox();
+        }
+        else{
+            nameSelector = new JComboBox(reportedLoot.toArray());
+        }
+        JButton newButton = new JButton("New");
+        newButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String newName = JOptionPane.showInputDialog("Name");
+                if(Utilities.validateString(newName, false)){
+                    nameSelector.addItem(newName);
+                    nameSelector.setSelectedItem(newName);
+                }
+            }
+        });
         JTextField valueField = new JTextField(oldValue);
         JPanel panel = new JPanel(new GridLayout(0, 1));
         panel.add(new JLabel("Name"));
-        panel.add(nameField);
+        panel.add(nameSelector);
+        panel.add(newButton);
         panel.add(new JLabel("Value"));
         panel.add(valueField);
         String[] output = new String[3];
         int result = JOptionPane.showConfirmDialog(null, panel, "Add Loot",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if(result == JOptionPane.OK_OPTION){
-            output[0] = nameField.getText();
+            if(nameSelector.getItemCount() == 0){
+                JOptionPane.showMessageDialog(null, "No name given!", "", JOptionPane.WARNING_MESSAGE);
+                return getLootInput(reportedLoot, output[0], output[1]);
+            }
+            output[0] = nameSelector.getSelectedItem().toString();
             output[1] = valueField.getText();
             if(validateOutput(output)){
                 return output;
             }
             else{
                 JOptionPane.showMessageDialog(null, "Invalid Data", "", JOptionPane.WARNING_MESSAGE);
-                return getLootInput(output[0], output[1]);
+                return getLootInput(reportedLoot, output[0], output[1]);
             }
         }
         else{
@@ -49,7 +75,8 @@ public class LootParser {
         String value = output[1];
         
         return Utilities.validateString(name, false) 
-                && Utilities.validateString(value, true);
+                && Utilities.validateString(value, true)
+                && ! value.isEmpty();
                 //&& Double.compare(Double.parseDouble(value), 0.0) > 0;
     }
 }

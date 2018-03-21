@@ -5,21 +5,12 @@
  */
 package loottracker;
 
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import DiskIO.DiskIO;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 
 /**
  *
@@ -33,7 +24,7 @@ public class LootTracker {
     public LootTracker() {
         huntsCreated = 0;
         huntingData = new HashMap<>();
-        //markupHandler = new MarkupHandler(Settings.markupFile);
+        markupHandler = new MarkupHandler(Settings.markupFile);
         
     }
     
@@ -87,20 +78,40 @@ public class LootTracker {
         return huntingData.get(group);
     }
     
+    public ArrayList<String> getReportedLootForGroup(String group){
+        if(huntingData.containsKey(group)){
+            return huntingData.get(group).getReportedLootForGroup();
+        }
+        else{
+            return new ArrayList<String>();
+        }
+    }
+    
+    public void addLootForGroup(String group, ArrayList<Loot> loot){
+        this.huntingData.get(group).addLootForGroup(loot);
+    }
+    
     public Hunt getHunt(String group, int ID){
         return huntingData.get(group).getHunt(ID);
     }
     
     public void removeHunt(String group, int ID){
-        this.huntingData.get(group).removeHunt(ID);
+        System.out.println("Hunts: " + huntingData.get(group).getHunts().size());
+        if(!this.huntingData.get(group).removeHunt(ID)){
+            System.out.println("Failed to remove hunt");
+        }
+        System.out.println("Hunts After: " + huntingData.get(group).getHunts().size());
+        if(huntingData.get(group).getHunts().size() == 0){
+            huntingData.remove(group);
+        }
     }
     
     public Map<DataKey, Double> getDataForHunt(String group, int ID){
         return huntingData.get(group).getHunt(ID).getDataForHunt(markupHandler);
     }
     
-    public void updateHunt(String group, int ID, double ammo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note){
-        huntingData.get(group).getHunt(ID).updateHunt(ammo, lootData, equipmentData, note, this.markupHandler);
+    public void updateHunt(String group, int ID, double ammo, double universalAmmo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note){
+        huntingData.get(group).getHunt(ID).updateHunt(ammo, universalAmmo, lootData, equipmentData, note, this.markupHandler);
     }
     
     

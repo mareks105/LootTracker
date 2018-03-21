@@ -3,6 +3,7 @@ package loottracker;
 
 public enum DataKey {
 		Ammo,
+                UniversalAmmo,
 		AmpDecayTT,
                 AmpDecayWithMarkup,
 		WeaponDecayTT,

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class MarkupHandler {
+    
 	private Map<String, Double> markupTable = new HashMap<>();
 	private String markupFile;
         
@@ -41,8 +42,8 @@ public class MarkupHandler {
 		}
 		else {
 			// No Markup data found
-			System.out.println("No Markup data found for " + itemName);
-			return 1;
+			//System.out.println("No Markup data found for " + itemName);
+			throw new MarkupHandlerException("No markup for item " + itemName);
 		}
 	}
         

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,8 +53,16 @@ public class DiskIO {
         Map<String, MobData> huntingData = lootTracker.getHuntingData();
         int huntsCreated = lootTracker.getHuntsCreated();
         generator.writeObjectFieldStart("huntingData");
+        generator.writeNumberField("nrGroups", huntingData.size());
         for (Map.Entry<String, MobData> entry : huntingData.entrySet()) {
-            generator.writeArrayFieldStart(entry.getKey());
+            generator.writeObjectFieldStart(entry.getKey());
+            generator.writeArrayFieldStart("loot");
+            for(String s : entry.getValue().getReportedLootForGroup()){
+                generator.writeString(s);
+            }
+            generator.writeEndArray();
+            generator.writeNumberField("nrHunts", entry.getValue().getHunts().size());
+            generator.writeArrayFieldStart("hunts");
             Map<Integer, Hunt> hunts = entry.getValue().getHunts();
             for (Map.Entry<Integer, Hunt> huntEntry : hunts.entrySet()) {
                 generator.writeStartObject();
@@ -85,13 +94,21 @@ public class DiskIO {
                     generator.writeNumberField(dataEntry.getKey().toString(), dataEntry.getValue());
                 }
                 generator.writeEndObject();
-                generator.writeStringField("endDate", df.format(hunt.getEndDate()));
+                if(hunt.getEndDate() == null){
+                    generator.writeStringField("endDate", "null");
+                }
+                else{
+                    generator.writeStringField("endDate", df.format(hunt.getEndDate()));
+                }
+                
                 generator.writeStringField("note", hunt.getNote());
                 // End Hunt Data
                 generator.writeEndObject();
             }
             // End of all MobData Hunts
             generator.writeEndArray();
+            // End of MobData object
+            generator.writeEndObject();
         }
         // Finished writing the huntingData to json
         generator.writeEndObject();
@@ -126,79 +143,148 @@ public class DiskIO {
     }
     
     private static void parseHuntingData(JsonParser parser, LootTracker lootTracker, DateFormat df) throws IOException, ParseException, InvalidKeyException{
-        parseHuntingGroup(parser, lootTracker, df);
+        parser.nextToken();
+        parser.nextToken();
+        int nrGroups = parser.getValueAsInt();
+        if(Settings.DEBUG){
+            System.out.println("groups: " + nrGroups);
+        }
+        for(int i = 0; i < nrGroups; i++){
+            parser.nextToken();
+            parser.nextToken();
+            parseHuntingGroup(parser, lootTracker, df);
+        }
     }
     
     private static void parseHuntingGroup(JsonParser parser, LootTracker lootTracker, DateFormat df) throws IOException, ParseException, InvalidKeyException{
         // Parse a group
-        while(parser.nextToken() != JsonToken.END_OBJECT){
-            String group = parser.getCurrentName();
-            lootTracker.getHuntingData().put(group, new MobData());
-            parser.nextToken();
-            // Parse all hunts for group
-            parser.nextToken();
-            parser.nextToken();
-            while(parser.nextToken() != JsonToken.END_ARRAY){
-                int runID = parser.getValueAsInt();
-                Hunt hunt = new Hunt();
-                parser.nextToken();
-                if(parser.getCurrentName().equals("allLoot")){
-                    parser.nextToken();
-                    // parse Loot
-                    while(parser.nextToken() != JsonToken.END_ARRAY){
-                        parseLoot(parser, hunt);
-                    }
-                    parser.nextToken();
-                }
-                if(parser.getCurrentName().equals("allEquipment")){
-                    parser.nextToken();
-                    // parse Equipment
-                    while(parser.nextToken() != JsonToken.END_ARRAY){
-                        parseEquipment(parser, hunt);
-                    }
-                    parser.nextToken();
-                }
-                parser.nextToken();
-                parseDataTable(parser, hunt);
-                parser.nextToken();
-                parser.nextToken();
-                Date endDate = df.parse(parser.getValueAsString());
-                hunt.end(endDate);
-                parser.nextToken();
-                parser.nextToken();
-                String note = parser.getValueAsString();
-                hunt.setNote(note);
-                lootTracker.addHuntToGroup(group, hunt);
-                parser.nextToken();
-            }
+        MobData data = new MobData();
+        String group = parser.getCurrentName();
+        if(Settings.DEBUG){
+            System.out.println(group);
         }
         parser.nextToken();
+        parser.nextToken();
+        ArrayList<String> lootForGroup = new ArrayList<>();
+        while(parser.nextToken() != JsonToken.END_ARRAY){
+            lootForGroup.add(parser.getValueAsString());
+        }
+        data.setReportedLootForGroup(lootForGroup);
+        parser.nextToken();
+        parser.nextToken();
+        
+        int nrHunts = parser.getValueAsInt();
+        if(Settings.DEBUG){
+            System.out.println(parser.getCurrentToken());
+            System.out.println("nrHunts: " + nrHunts);
+        }
+        lootTracker.getHuntingData().put(group, data);
+        parser.nextToken();
+        // Parse all hunts for group
+        parser.nextToken();
+        parser.nextToken();
+        parser.nextToken();
+        
+        for(int j = 0; j < nrHunts; j++){
+            parser.nextToken();
+            parseHunt(parser, lootTracker, group, df);
+        }
     }
     
-    public static void parseDataTable(JsonParser parser, Hunt hunt) throws IOException, InvalidKeyException{
+    private static void parseHunt(JsonParser parser, LootTracker lootTracker, String group, DateFormat df) throws IOException, InvalidKeyException, ParseException{
+        int runID = parser.getValueAsInt();
+        if(Settings.DEBUG){
+            System.out.println("runID: " + runID);
+        }
+        Hunt hunt = new Hunt();
+        parser.nextToken();
+        
+        parser.nextToken();
+        // parse Loot
+        while(parser.nextToken() != JsonToken.END_ARRAY){
+            parseLoot(parser, hunt);
+        }
+        parser.nextToken();
+        
+        parser.nextToken();
+        // parse Equipment
+        while(parser.nextToken() != JsonToken.END_ARRAY){
+            parseEquipment(parser, hunt);
+        }
+        parser.nextToken();
+
+        parser.nextToken();
+        parseDataTable(parser, hunt);
+        parser.nextToken();
+        parser.nextToken();
+        parser.nextToken();
+        String date = parser.getValueAsString();
+        if( ! date.equals("null")){
+            Date endDate = df.parse(parser.getValueAsString());
+            if(Settings.DEBUG){
+                System.out.println(endDate);
+            }
+            hunt.end(endDate);
+        }
+        
+        parser.nextToken();
+        parser.nextToken();
+        String note = parser.getValueAsString();
+        hunt.setNote(note);
+        lootTracker.addHuntToGroup(group, hunt);
+        parser.nextToken();
+        parser.nextToken();
+        parser.nextToken();
+        //System.out.println(parser.getCurrentToken());
+            
+    }
+    
+    private static void parseDataTable(JsonParser parser, Hunt hunt) throws IOException, InvalidKeyException{
         Map<DataKey, Double> dataTable = hunt.getDataTable();
-        while(parser.nextToken() != JsonToken.END_OBJECT){
+        //System.out.println(parser.getCurrentName());
+        //System.out.println(parser.getCurrentToken());
+        for(int i = 0; i < 20; i++){
             parser.nextToken();
+            parser.nextToken();
+            //System.out.println(parser.getCurrentToken());
+            //System.out.println(parser.getCurrentName());
             dataTable.put(Utilities.getDataKey(parser.getCurrentName()), parser.getValueAsDouble());
         }
+        
     }
     
     private static void parseEquipment(JsonParser parser, Hunt hunt) throws IOException{
         parser.nextToken();
         parser.nextToken();
         String name = parser.getValueAsString();
+        if(Settings.DEBUG){
+            System.out.println("name: " + name);
+        }
         parser.nextToken();
         parser.nextToken();
+        
         String type = parser.getValueAsString();
+        if(Settings.DEBUG){
+            System.out.println("type: " + type);
+        }
         parser.nextToken();
         parser.nextToken();
         double valueTT = parser.getValueAsDouble();
+        if(Settings.DEBUG){
+            System.out.println("valueTT: "  + valueTT);
+        }
         parser.nextToken();
         parser.nextToken();
         double markup = parser.getValueAsDouble();
+        if(Settings.DEBUG){
+            System.out.println("markup: "  + markup);
+        }
         parser.nextToken();
         parser.nextToken();
         double endValue = parser.getValueAsDouble();
+        if(Settings.DEBUG){
+            System.out.println("endValue: "  + endValue);
+        }
         switch(type){
             case "Weapon":
                 hunt.addEquipment(new Weapon(name, valueTT, markup, endValue));
@@ -222,9 +308,15 @@ public class DiskIO {
         parser.nextToken();
         parser.nextToken();
         String name = parser.getValueAsString();
+        if(Settings.DEBUG){
+            System.out.println("name: " + name);
+        }
         parser.nextToken();
         parser.nextToken();
         double valueTT = parser.getValueAsDouble();
+        if(Settings.DEBUG){
+            System.out.println("value: " + valueTT);
+        }
         hunt.addLoot(new Loot(name, valueTT));
         parser.nextToken();
     }

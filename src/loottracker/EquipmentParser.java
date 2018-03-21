@@ -36,7 +36,7 @@ public class EquipmentParser {
         }
     }
     
-    public static String[] getEquipmentInput(String oldName, String oldType, String oldStart, String oldMarkup, String oldEnd){
+    public static String[] getEquipmentInput(String oldName, String oldType, String oldStart, String oldEnd, String oldMarkup){
         String[] types = {"Weapon", "Amp", "Healing", "Armor"};
         JComboBox<String> typeSelector = new JComboBox<>(types);
         if(oldType != null){
@@ -53,18 +53,18 @@ public class EquipmentParser {
         panel.add(nameField);
         panel.add(new JLabel("Start Value:"));
         panel.add(startField);
-        panel.add(new JLabel("Markup:"));
-        panel.add(markupField);
         panel.add(new JLabel("End Value:"));
         panel.add(endField);
+        panel.add(new JLabel("Markup:"));
+        panel.add(markupField);
         int result = JOptionPane.showConfirmDialog(null, panel, "Add Equipment",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if( result == JOptionPane.OK_OPTION){
             output[0] = nameField.getText();
             output[1] = (String)typeSelector.getSelectedItem();
             output[2] = startField.getText();
-            output[3] = markupField.getText();
-            output[4] = endField.getText();
+            output[3] = endField.getText();
+            output[4] = markupField.getText();
             if(validateOutput(output)){
                 return output;
             }
@@ -83,8 +83,8 @@ public class EquipmentParser {
         String name = output[0];
         String type = output[1];
         String startValue = output[2];
-        String markup = output[3];
-        String endValue = output[4];
+        String endValue = output[3];
+        String markup = output[4];
 
         return Utilities.validateString(name, false) 
                 && Utilities.validateString(type, false) 

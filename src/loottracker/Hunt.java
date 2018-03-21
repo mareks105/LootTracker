@@ -12,11 +12,11 @@ public class Hunt {
     private Date endDate;
     private String note;
     
-    public Hunt(double ammo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note, MarkupHandler markupHandler){
+    public Hunt(double ammo, double universalAmmo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note, MarkupHandler markupHandler){
         // Init Fields in Hunt
         this.endDate = null;
         initDataTable();
-        updateHunt(ammo, lootData, equipmentData, note, markupHandler);
+        updateHunt(ammo, universalAmmo, lootData, equipmentData, note, markupHandler);
     }
     
     public Hunt(){
@@ -44,12 +44,14 @@ public class Hunt {
         computeReturnTT();
     }
     
-    public void updateHunt(double ammo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note, MarkupHandler markupHandler){
+    public void updateHunt(double ammo, double universalAmmo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note, MarkupHandler markupHandler){
         this.allLoot = new ArrayList<>();
         this.allEquipment = new ArrayList<>();
+        initDataTable();
         addLootFromData(lootData, markupHandler);
         addEquipmentFromData(equipmentData);
         this.dataTable.put(DataKey.Ammo, ammo);
+        this.dataTable.put(DataKey.UniversalAmmo, universalAmmo);
         this.note = note;
         computeDecayForEquipment();
         computeLootTT();
@@ -70,8 +72,8 @@ public class Hunt {
             String name = item.elementAt(0);
             String type = item.elementAt(1);
             double startValue = Double.parseDouble(item.elementAt(2));
-            double markup = Double.parseDouble(item.elementAt(3)) / 100.0;
-            double endValue = Double.parseDouble(item.elementAt(4));
+            double endValue = Double.parseDouble(item.elementAt(3));
+            double markup = Double.parseDouble(item.elementAt(4)) / 100.0;
             if(null == type){
                 throw new RuntimeException("Invalid type for equipment!");
             }
@@ -135,7 +137,7 @@ public class Hunt {
         }
 
     }
-
+    
     public double getAmmo(){
         if(this.dataTable.containsKey(DataKey.Ammo)){
             return this.dataTable.get(DataKey.Ammo);
@@ -144,6 +146,26 @@ public class Hunt {
             return 0;
         }
     }
+    
+    public void addUniversalAmmo(double ammo){
+        if(this.dataTable.containsKey(DataKey.UniversalAmmo)){
+            this.dataTable.merge(DataKey.UniversalAmmo, ammo, Double::sum);
+        }
+        else{
+            this.dataTable.put(DataKey.UniversalAmmo, ammo);
+        }
+
+    }
+    
+    public double getUniversalAmmo(){
+        if(this.dataTable.containsKey(DataKey.UniversalAmmo)){
+            return this.dataTable.get(DataKey.UniversalAmmo);
+        }
+        else{
+            return 0;
+        }
+    }
+    
 
     /**
      *  The idea: Call this function when the user says that the hunt ended.
@@ -177,7 +199,8 @@ public class Hunt {
         this.dataTable.put(DataKey.TotalCost,
                 Utilities.round(DoubleStream.of(
                         this.dataTable.get(DataKey.TotalDecayWithMarkup),
-                        this.dataTable.get(DataKey.Ammo)
+                        this.dataTable.get(DataKey.Ammo),
+                        this.dataTable.get(DataKey.UniversalAmmo)
                 ).sum(),2));
     }
 

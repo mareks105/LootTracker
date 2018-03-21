@@ -17,6 +17,8 @@ public class Utilities {
         switch(key){
             case "Ammo":
                 return DataKey.Ammo;
+            case "UniversalAmmo":
+                return DataKey.UniversalAmmo;
             case "AmpDecayTT":
                 return DataKey.AmpDecayTT;
             case "AmpDecayWithMarkup":
@@ -123,9 +125,7 @@ public class Utilities {
         if(shouldBeDouble){
             if (Pattern.matches(fpRegex, s))
                 return true;
-            else {
-                return false;
-            }
+            else return s.isEmpty();
         }
         else{
             if (Pattern.matches(fpRegex, s)){
