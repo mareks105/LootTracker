@@ -24,7 +24,7 @@ public class LootTracker {
     public LootTracker() {
         huntsCreated = 0;
         huntingData = new HashMap<>();
-        markupHandler = new MarkupHandler(Settings.markupFile);
+        //markupHandler = new MarkupHandler(Settings.markupFile);
         
     }
     
