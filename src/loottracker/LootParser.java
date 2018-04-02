@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -21,7 +22,7 @@ import javax.swing.JTextField;
  * @author mege9
  */
 public class LootParser {
-    public static String[] getLootInput(ArrayList<String> reportedLoot, String oldName, String oldValue){
+    public static String[] getLootInput(JFrame parent, ArrayList<String> reportedLoot, String oldName, String oldValue){
         JComboBox nameSelector;
         if(reportedLoot.size() == 0){
             nameSelector = new JComboBox();
@@ -48,12 +49,12 @@ public class LootParser {
         panel.add(new JLabel("Value"));
         panel.add(valueField);
         String[] output = new String[3];
-        int result = JOptionPane.showConfirmDialog(null, panel, "Add Loot",
+        int result = JOptionPane.showConfirmDialog(parent, panel, "Add Loot",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if(result == JOptionPane.OK_OPTION){
             if(nameSelector.getItemCount() == 0){
-                JOptionPane.showMessageDialog(null, "No name given!", "", JOptionPane.WARNING_MESSAGE);
-                return getLootInput(reportedLoot, output[0], output[1]);
+                JOptionPane.showMessageDialog(parent, "No name given!", "", JOptionPane.WARNING_MESSAGE);
+                return getLootInput(parent, reportedLoot, output[0], output[1]);
             }
             output[0] = nameSelector.getSelectedItem().toString();
             output[1] = valueField.getText();
@@ -61,8 +62,8 @@ public class LootParser {
                 return output;
             }
             else{
-                JOptionPane.showMessageDialog(null, "Invalid Data", "", JOptionPane.WARNING_MESSAGE);
-                return getLootInput(reportedLoot, output[0], output[1]);
+                JOptionPane.showMessageDialog(parent, "Invalid Data", "", JOptionPane.WARNING_MESSAGE);
+                return getLootInput(parent, reportedLoot, output[0], output[1]);
             }
         }
         else{

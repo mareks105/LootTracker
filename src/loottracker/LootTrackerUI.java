@@ -905,7 +905,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addEquipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEquipButtonActionPerformed
-        String[] equipmentInput = EquipmentParser.getEquipmentInput(null, null, null, null, "100");
+        String[] equipmentInput = EquipmentParser.getEquipmentInput((JFrame)this, null, null, null, null, "100");
         if(equipmentInput.length > 0){
             DefaultTableModel model = (DefaultTableModel) equipmentTable.getModel();
             model.addRow(new Object[]{
@@ -939,6 +939,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
             return;
         }
         String[] equipmentInput = EquipmentParser.getEquipmentInput(
+                (JFrame)this,
                 (String)equipmentTable.getValueAt(row, 0),
                 (String)equipmentTable.getValueAt(row, 1),
                 (String)equipmentTable.getValueAt(row, 2),
@@ -1044,7 +1045,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
             reportedLootForRun.add(rowData.elementAt(0));
         });
         if(this.mobSelector.getItemCount() == 0){
-            lootInput = LootParser.getLootInput(reportedLootForRun, null, null);
+            lootInput = LootParser.getLootInput((JFrame)this, reportedLootForRun, null, null);
         }
         else{
             ArrayList<String> reportedGroup = this.lootTracker.getReportedLootForGroup(this.mobSelector.getSelectedItem().toString());
@@ -1054,6 +1055,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
                 }
             });
             lootInput = LootParser.getLootInput(
+                    (JFrame)this,
                     reportedLootForRun,
                 null, null);
         }
@@ -1093,6 +1095,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
         });
         if(this.mobSelector.getItemCount() == 0){
             lootInput = LootParser.getLootInput(
+                    (JFrame)this,
                 reportedLootForRun,
                 (String)lootTable.getValueAt(row, 0),
                 (String)lootTable.getValueAt(row, 1));
@@ -1105,6 +1108,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
                 }
             });
             lootInput = LootParser.getLootInput(
+                    (JFrame)this,
                 reportedLootForRun,
                 (String)lootTable.getValueAt(row, 0),
                 (String)lootTable.getValueAt(row, 1));

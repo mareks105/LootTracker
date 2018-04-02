@@ -7,6 +7,7 @@ package loottracker;
 
 import java.awt.GridLayout;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -36,7 +37,7 @@ public class EquipmentParser {
         }
     }
     
-    public static String[] getEquipmentInput(String oldName, String oldType, String oldStart, String oldEnd, String oldMarkup){
+    public static String[] getEquipmentInput(JFrame parent, String oldName, String oldType, String oldStart, String oldEnd, String oldMarkup){
         String[] types = {"Weapon", "Amp", "Healing", "Armor"};
         JComboBox<String> typeSelector = new JComboBox<>(types);
         if(oldType != null){
@@ -57,7 +58,7 @@ public class EquipmentParser {
         panel.add(endField);
         panel.add(new JLabel("Markup:"));
         panel.add(markupField);
-        int result = JOptionPane.showConfirmDialog(null, panel, "Add Equipment",
+        int result = JOptionPane.showConfirmDialog(parent, panel, "Add Equipment",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if( result == JOptionPane.OK_OPTION){
             output[0] = nameField.getText();
@@ -69,8 +70,8 @@ public class EquipmentParser {
                 return output;
             }
             else{
-                JOptionPane.showMessageDialog(null, "Invalid Data", "", JOptionPane.WARNING_MESSAGE);
-                return getEquipmentInput(output[0], output[1], output[2], output[3], output[4]);
+                JOptionPane.showMessageDialog(parent, "Invalid Data", "", JOptionPane.WARNING_MESSAGE);
+                return getEquipmentInput(parent, output[0], output[1], output[2], output[3], output[4]);
             }
             
         }
