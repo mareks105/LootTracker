@@ -51,7 +51,7 @@ public class MobData {
         }
         
 	public Map<DataKey, Double> getDataForHunts(MarkupHandler markupHandler) {
-                Map<DataKey, Double> dataTable = new EnumMap<>(DataKey.class);
+                Map<DataKey, Double> dataTable = Utilities.initDataTable();
                 hunts.forEach((Integer ID, Hunt hunt) -> {
                     if(hunt.getEndDate() != null){
                         hunt.getDataForHunt(markupHandler).forEach((DataKey k, Double v) -> {
@@ -61,12 +61,14 @@ public class MobData {
                         });
                     }
                 });
-                dataTable.put(DataKey.ReturnTTpercent, 
+                if(Double.compare(dataTable.get(DataKey.TotalCost), 0) > 0){
+                    dataTable.put(DataKey.ReturnTTpercent, 
                     Utilities.round(100 * dataTable.get(DataKey.TotalLootTT) / 
                     dataTable.get(DataKey.TotalCost),2));
                 dataTable.put(DataKey.ReturnWithMarkupPercent, 
                     Utilities.round(100 * dataTable.get(DataKey.TotalLootWithMarkup) / 
                     dataTable.get(DataKey.TotalCost),2));
+                }
 		return dataTable;
 	}
 }

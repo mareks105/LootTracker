@@ -4,11 +4,20 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Utilities {
 
+    public static Map<DataKey,Double> initDataTable(){
+        Map<DataKey, Double> dataTable = new EnumMap<>(DataKey.class);
+        for (DataKey key : DataKey.values()){
+            dataTable.put(key, 0.0);
+        }
+        return dataTable;
+    }
+    
     public static void roundData(Map<loottracker.DataKey, Double> dataTable) {
         dataTable.replaceAll((k, v) -> round(v,2));
     }

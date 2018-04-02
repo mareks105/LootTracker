@@ -69,9 +69,9 @@ public class LootTracker {
         Hunt hunt = this.getHunt(oldGroup, ID);
         this.removeHunt(oldGroup, ID);
         this.addHuntToGroup(newGroup, hunt, ID);
-        if(huntingData.get(oldGroup).getHunts().size() == 0){
+        /*if(huntingData.get(oldGroup).getHunts().size() == 0){
             huntingData.remove(oldGroup);
-        }
+        }*/
     }
     
     public MobData getMobData(String group){

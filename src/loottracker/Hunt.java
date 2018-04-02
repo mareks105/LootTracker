@@ -15,23 +15,18 @@ public class Hunt {
     public Hunt(double ammo, double universalAmmo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note, MarkupHandler markupHandler){
         // Init Fields in Hunt
         this.endDate = null;
-        initDataTable();
+        this.dataTable = Utilities.initDataTable();
         updateHunt(ammo, universalAmmo, lootData, equipmentData, note, markupHandler);
     }
     
     public Hunt(){
         this.endDate = null;
-        initDataTable();
+        this.dataTable = Utilities.initDataTable();
         allLoot = new ArrayList<>();
         allEquipment = new ArrayList<>();
     }
     
-    private void initDataTable(){
-        this.dataTable = new EnumMap<>(DataKey.class);
-        for (DataKey key : DataKey.values()){
-            this.dataTable.put(key, 0.0);
-        }
-    }
+    
     
     public Map<DataKey, Double> getDataTable(){
         return this.dataTable;
@@ -47,7 +42,7 @@ public class Hunt {
     public void updateHunt(double ammo, double universalAmmo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note, MarkupHandler markupHandler){
         this.allLoot = new ArrayList<>();
         this.allEquipment = new ArrayList<>();
-        initDataTable();
+        this.dataTable = Utilities.initDataTable();
         addLootFromData(lootData, markupHandler);
         addEquipmentFromData(equipmentData);
         this.dataTable.put(DataKey.Ammo, ammo);
