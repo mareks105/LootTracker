@@ -28,6 +28,7 @@ public class NewRunUI extends javax.swing.JFrame {
     public NewRunUI(LootTracker lootTracker, LootTrackerUI mainUI) {
         this.lootTracker = lootTracker;
         this.mainUI = mainUI;
+        UtilitiesUI.showFrameOnScreen(this, 2);
         initComponents();
         setupUserInterface();
     }

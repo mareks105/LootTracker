@@ -45,6 +45,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
      */
     public LootTrackerUI() throws InvalidFormatException, ParseException, InvalidKeyException {
         this.lootTracker = new LootTracker();
+        UtilitiesUI.showFrameOnScreen(this, 2);
         try {
             this.lootTracker = DiskIO.loadDataFromFile(df);
         } catch (IOException ex) {
