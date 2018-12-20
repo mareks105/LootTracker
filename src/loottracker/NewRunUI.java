@@ -396,7 +396,7 @@ public class NewRunUI extends javax.swing.JFrame {
         
     
     private void addEquipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEquipButtonActionPerformed
-        String[] equipmentInput = EquipmentParser.getEquipmentInput((JFrame)this, null, null, null, null, "100");
+        String[] equipmentInput = EquipmentParser.getEquipmentInput((JFrame)this, lootTracker, null, null, null, null, null);
         if(equipmentInput.length > 0){
             DefaultTableModel model = (DefaultTableModel) equipmentTable.getModel();
             model.addRow(new Object[]{
@@ -411,7 +411,7 @@ public class NewRunUI extends javax.swing.JFrame {
     }//GEN-LAST:event_addEquipButtonActionPerformed
 
     private void newMobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMobButtonActionPerformed
-        String newMob = JOptionPane.showInputDialog(null, "Name of Mob:");
+        String newMob = JOptionPane.showInputDialog((JFrame)this, "Name of Mob:");
         this.mobSelector.addItem(newMob);
         this.mobSelector.setSelectedItem(newMob);
     }//GEN-LAST:event_newMobButtonActionPerformed
@@ -420,11 +420,12 @@ public class NewRunUI extends javax.swing.JFrame {
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         int row = equipmentTable.getSelectedRow();
         if ( row == -1){
-            JOptionPane.showMessageDialog(null, "No equipment entry selected", "Action Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog((JFrame)this, "No equipment entry selected", "Action Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         String[] equipmentInput = EquipmentParser.getEquipmentInput(
                 (JFrame)this,
+                lootTracker,
                 (String)equipmentTable.getValueAt(row, 0),
                 (String)equipmentTable.getValueAt(row, 1),
                 (String)equipmentTable.getValueAt(row, 2),
@@ -443,7 +444,7 @@ public class NewRunUI extends javax.swing.JFrame {
     private void removeEquipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeEquipButtonActionPerformed
         int row = equipmentTable.getSelectedRow();
         if ( row == -1){
-            JOptionPane.showMessageDialog(null, "No equipment entry selected", "Action Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog((JFrame)this, "No equipment entry selected", "Action Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         DefaultTableModel model = (DefaultTableModel)equipmentTable.getModel();
@@ -478,18 +479,19 @@ public class NewRunUI extends javax.swing.JFrame {
         if(lootInput.length > 0){
             String name = lootInput[0];
             String value = lootInput[1];
-            String markup;
+            String[] markupData = new String[2];
             try{
-                markup = Double.toString(this.lootTracker.getMarkupHandler().getMarkup(name) * 100);
+                markupData[1] = Double.toString(this.lootTracker.getMarkupHandler().getMarkup(name) * 100);
+                markupData[0] = name;
             }
             catch(MarkupHandlerException e){
-                markup = MarkupParser.getMarkupInput(name, null);
-                this.lootTracker.getMarkupHandler().addMarkup(name, Double.parseDouble(markup) / 100);
+                markupData = MarkupParser.getMarkupInput((JFrame)this, name, null);
+                this.lootTracker.getMarkupHandler().addMarkup(name, Double.parseDouble(markupData[1]) / 100);
             }
             model.addRow(new Object[]{
             name,
             value,
-            markup});
+            markupData[1]});
             
         }
         
@@ -498,7 +500,7 @@ public class NewRunUI extends javax.swing.JFrame {
     private void editLootButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLootButtonActionPerformed
         int row = lootTable.getSelectedRow();
         if ( row == -1){
-            JOptionPane.showMessageDialog(null, "No loot entry selected", "Action Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog((JFrame)this, "No loot entry selected", "Action Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         String[] lootInput;
@@ -538,7 +540,7 @@ public class NewRunUI extends javax.swing.JFrame {
     private void removeLootButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLootButtonActionPerformed
         int row = lootTable.getSelectedRow();
         if ( row == -1){
-            JOptionPane.showMessageDialog(null, "No loot entry selected", "Action Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog((JFrame)this, "No loot entry selected", "Action Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         DefaultTableModel model = (DefaultTableModel)lootTable.getModel();
@@ -583,7 +585,7 @@ public class NewRunUI extends javax.swing.JFrame {
             
         }
         else{
-            JOptionPane.showMessageDialog(null, "Invalid Ammo!", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog((JFrame)this, "Invalid Ammo!", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         if(Utilities.validateString(this.universalAmmoField.getText(), true)){
@@ -596,11 +598,11 @@ public class NewRunUI extends javax.swing.JFrame {
             }
         }
         else{
-            JOptionPane.showMessageDialog(null, "Invalid Universal Ammo!", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog((JFrame)this, "Invalid Universal Ammo!", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         if(noUniversalAmmo && noAmmo){
-            JOptionPane.showMessageDialog(null, "No Ammo entered!", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog((JFrame)this, "No Ammo entered!", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         if(this.mobSelector.getItemCount() > 0 
@@ -608,17 +610,17 @@ public class NewRunUI extends javax.swing.JFrame {
             group = (String)this.mobSelector.getSelectedItem().toString();
         }
         else{
-            JOptionPane.showMessageDialog(null, "Invalid groupName!", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog((JFrame)this, "Invalid groupName!", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
         String note = this.noteField.getText();
-        int result = JOptionPane.showConfirmDialog(null, null, "Are you sure?", JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
+        int result = JOptionPane.showConfirmDialog((JFrame)this, null, "Are you sure?", JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
         if(result == JOptionPane.YES_OPTION){
             Hunt hunt = new Hunt(ammo, universalAmmo, lootData, equipmentData, note, lootTracker.getMarkupHandler());
-            
             if(end){
                 hunt.end(new Date());
+                EquipmentUtilities.addEquipmentToSettingsFromData(lootTracker, equipmentData);
             }
             int runID = this.lootTracker.addHuntToGroup(group, hunt);
             this.lootTracker.addLootForGroup(group, hunt.getLoot());

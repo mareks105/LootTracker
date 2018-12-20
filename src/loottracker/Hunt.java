@@ -44,7 +44,7 @@ public class Hunt {
         this.allEquipment = new ArrayList<>();
         this.dataTable = Utilities.initDataTable();
         addLootFromData(lootData, markupHandler);
-        addEquipmentFromData(equipmentData);
+        EquipmentUtilities.updateEquipmentFromData(allEquipment, equipmentData);
         this.dataTable.put(DataKey.Ammo, ammo);
         this.dataTable.put(DataKey.UniversalAmmo, universalAmmo);
         this.note = note;
@@ -62,34 +62,7 @@ public class Hunt {
         });
     }
 
-    private void addEquipmentFromData(Vector<Vector<String>> equipmentData){
-        equipmentData.forEach((Vector<String> item) -> {
-            String name = item.elementAt(0);
-            String type = item.elementAt(1);
-            double startValue = Double.parseDouble(item.elementAt(2));
-            double endValue = Double.parseDouble(item.elementAt(3));
-            double markup = Double.parseDouble(item.elementAt(4)) / 100.0;
-            if(null == type){
-                throw new RuntimeException("Invalid type for equipment!");
-            }
-            else switch (type) {
-                case "Weapon":
-                    allEquipment.add(new Weapon(name, startValue, markup, endValue));
-                    break;
-                case "Amp":
-                    allEquipment.add(new Amp(name, startValue, markup, endValue));
-                    break;
-                case "Healing":
-                    allEquipment.add(new HealingTool(name, startValue, markup, endValue));
-                    break;
-                case "Armor":
-                    allEquipment.add(new Armor(name, startValue, markup, endValue));
-                    break;
-                default:
-                    throw new RuntimeException("Invalid type for equipment!");
-            }
-        });
-    }
+    
 
     public void addEquipment(Equipment equipment) {
             allEquipment.add(equipment);

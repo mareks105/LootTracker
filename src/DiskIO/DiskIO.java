@@ -18,8 +18,10 @@ import java.security.InvalidKeyException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import loottracker.*;
 
@@ -39,6 +41,7 @@ public class DiskIO {
         JsonGenerator generator = factory.createGenerator(new File(Settings.dataFile), JsonEncoding.UTF8);
         generator.writeStartObject();
         saveHuntingDataToJson(generator, lootTracker, df);
+        saveEquipmentDataToJson(generator, lootTracker.getAllEquipment());
         saveMarkupHandlerToJson(generator, lootTracker.getMarkupHandler());
         generator.writeEndObject();
         generator.close();
@@ -81,7 +84,7 @@ public class DiskIO {
                 for (Equipment e : hunt.getEquipment()) {
                     generator.writeStartObject();
                     generator.writeStringField("name", e.getName());
-                    generator.writeStringField("type", e.getType().toString());
+                    generator.writeStringField("type", EquipmentUtilities.getTypeForEquipment(e));
                     generator.writeNumberField("valueTT", e.getValue());
                     generator.writeNumberField("markup", e.getMarkup());
                     generator.writeNumberField("endValue", e.getEndValue());
@@ -113,7 +116,21 @@ public class DiskIO {
         // Finished writing the huntingData to json
         generator.writeEndObject();
     }
-
+    
+    private static void saveEquipmentDataToJson(JsonGenerator generator, ArrayList<Equipment> equipmentData) throws IOException {
+        generator.writeArrayFieldStart("allEquipment");
+        for (Equipment e : equipmentData) {
+            generator.writeStartObject();
+            generator.writeStringField("name", e.getName());
+            generator.writeStringField("type", EquipmentUtilities.getTypeForEquipment(e));
+            generator.writeNumberField("valueTT", e.getValue());
+            generator.writeNumberField("markup", e.getMarkup());
+            generator.writeEndObject();
+        }
+        generator.writeEndArray();
+        
+    }
+    
     private static void saveMarkupHandlerToJson(JsonGenerator generator, MarkupHandler markupHandler) throws IOException {
         generator.writeObjectFieldStart("markupHandler");
         generator.writeObjectFieldStart("markupTable");
@@ -137,8 +154,9 @@ public class DiskIO {
         parser.nextToken();
         parser.nextToken();
         parseHuntingData(parser, lootTracker, df);
-        parser.nextToken();
-        parser.nextToken();
+        parseEquipmentData(parser, lootTracker);
+        System.out.println(parser.getCurrentToken());
+        System.out.println(parser.getCurrentName());
         parseMarkupData(parser, lootTracker);        
     }
     
@@ -154,6 +172,7 @@ public class DiskIO {
             parser.nextToken();
             parseHuntingGroup(parser, lootTracker, df);
         }
+        parser.nextToken();
     }
     
     private static void parseHuntingGroup(JsonParser parser, LootTracker lootTracker, DateFormat df) throws IOException, ParseException, InvalidKeyException{
@@ -209,7 +228,7 @@ public class DiskIO {
         parser.nextToken();
         // parse Equipment
         while(parser.nextToken() != JsonToken.END_ARRAY){
-            parseEquipment(parser, hunt);
+            parseEquipment(parser, hunt, lootTracker);
         }
         parser.nextToken();
 
@@ -253,7 +272,7 @@ public class DiskIO {
         
     }
     
-    private static void parseEquipment(JsonParser parser, Hunt hunt) throws IOException{
+    private static void parseEquipment(JsonParser parser, Hunt hunt, LootTracker lootTracker) throws IOException{
         parser.nextToken();
         parser.nextToken();
         String name = parser.getValueAsString();
@@ -292,7 +311,7 @@ public class DiskIO {
             case "Amp":
                 hunt.addEquipment(new Amp(name, valueTT, markup, endValue));
                 break;
-            case "HealingTool":
+            case "Healing":
                 hunt.addEquipment(new Amp(name, valueTT, markup, endValue));
                 break;
             case "Armor":
@@ -321,15 +340,118 @@ public class DiskIO {
         parser.nextToken();
     }
     
+    private static void parseEquipmentData(JsonParser parser, LootTracker lootTracker) throws IOException, InvalidKeyException {
+        parser.nextToken();
+        parser.nextToken();
+        System.out.println(parser.getCurrentToken());
+        System.out.println(parser.getCurrentName());
+        while(parser.nextToken() != JsonToken.END_ARRAY){
+            System.out.println(parser.getCurrentToken());
+            System.out.println(parser.getCurrentName());
+            parser.nextToken();
+            parser.nextToken();
+            String name = parser.getValueAsString();
+            if(Settings.DEBUG){
+                System.out.println("name: " + name);
+            }
+            parser.nextToken();
+            parser.nextToken();
+
+            String type = parser.getValueAsString();
+            if(Settings.DEBUG){
+                System.out.println("type: " + type);
+            }
+            parser.nextToken();
+            parser.nextToken();
+            double valueTT = parser.getValueAsDouble();
+            if(Settings.DEBUG){
+                System.out.println("valueTT: "  + valueTT);
+            }
+            parser.nextToken();
+            parser.nextToken();
+            double markup = parser.getValueAsDouble();
+            if(Settings.DEBUG){
+                System.out.println("markup: "  + markup);
+            }
+            switch(type){
+                case "Weapon":
+                    lootTracker.getWeapons().add(new Weapon(name, valueTT, markup));
+                    break;
+                case "Amp":
+                    lootTracker.getAmps().add(new Amp(name, valueTT, markup));
+                    break;
+                case "Healing":
+                    lootTracker.getHealingTools().add(new HealingTool(name, valueTT, markup));
+                    break;
+                case "Armor":
+                    lootTracker.getArmors().add(new Armor(name, valueTT, markup));
+                    break;
+                default:
+                    throw new InvalidFormatException("Unknown equipment type found: " + type, null, null);
+            }
+            parser.nextToken();
+        }
+        parser.nextToken();
+        /*
+        List<String> types = Arrays.asList("Armor", "Amp", "HealingTool", "Weapon");
+        parser.nextToken();
+        parser.nextToken();
+        
+        for(int i = 0; i < 4; i++){
+            EquipmentType type;
+            switch(i){
+                    case 0:
+                        type = EquipmentType.Armor;
+                        break;
+                    case 1:
+                        type = EquipmentType.Amp;
+                        break;
+                    case 2:
+                        type = EquipmentType.HealingTool;
+                        break;
+                    case 3:
+                        type = EquipmentType.Weapon;
+                        break;
+                    default:
+                        throw new InvalidKeyException("unknown error");
+            }
+            parseEquipmentType(parser, lootTracker, types, type);
+        }*/
+        
+    }
+    
+   /* private static void parseEquipmentType(JsonParser parser, LootTracker lootTracker, List<String> types, EquipmentType type) throws IOException{
+        //System.out.println(type);
+        if(parser.getCurrentName().equals("Equipment")){
+            parser.nextToken();
+            
+        }
+        while(parser.getCurrentToken() != JsonToken.END_OBJECT){
+          
+            parser.nextToken();
+            String name = parser.getCurrentName();
+            if(! types.contains(name) && parser.getCurrentToken() != JsonToken.FIELD_NAME){
+                double value = parser.getValueAsDouble();
+                //System.out.print(name + " - ");        
+                //System.out.println(value);
+                lootTracker.addEquipment(type, name, value);
+            }
+        }
+        //System.out.println(parser.getCurrentToken());
+        parser.nextToken();
+        parser.nextToken();
+    }*/
+    
     private static void parseMarkupData(JsonParser parser, LootTracker lootTracker) throws IOException{
         Map<String, Double> markupTable = new HashMap<>();
         parser.nextToken();
         while(parser.nextToken() != JsonToken.END_OBJECT){
             parser.nextToken();
             String name = parser.getCurrentName();
-            double markup = parser.getValueAsDouble();
-            markupTable.put(name, markup);
-            
+            if(name != "markupTable"){
+                double markup = parser.getValueAsDouble();
+                markupTable.put(name, markup);
+            }
         }
         lootTracker.addMarkupHandler(new MarkupHandler(markupTable));
     }

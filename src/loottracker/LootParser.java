@@ -34,7 +34,7 @@ public class LootParser {
         newButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                String newName = JOptionPane.showInputDialog("Name");
+                String newName = JOptionPane.showInputDialog(parent, "Name");
                 if(Utilities.validateString(newName, false)){
                     nameSelector.addItem(newName);
                     nameSelector.setSelectedItem(newName);

@@ -5,11 +5,11 @@
  */
 package loottracker;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import static loottracker.EquipmentParser.getEquipmentInput;
 
 /**
  *
@@ -17,7 +17,7 @@ import static loottracker.EquipmentParser.getEquipmentInput;
  */
 public class MarkupParser {
     
-    public static String getMarkupInput(String name, String oldMarkup){
+    public static String[] getMarkupInput(JFrame parent, String name, String oldMarkup){
         JPanel panel = new JPanel();
         JTextField nameField = new JTextField(name);
         nameField.setEditable(false);
@@ -29,19 +29,21 @@ public class MarkupParser {
         panel.add(nameField);
         panel.add(new JLabel("Markup"));
         panel.add(markupField);
-        int result = JOptionPane.showConfirmDialog(null, panel, "Add Markup",
+        int result = JOptionPane.showConfirmDialog(parent, panel, "Add Markup",
                 JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE);
         if(result == JOptionPane.OK_OPTION){
             String markup = markupField.getText();
             if(validateOutput(markup)){
-                return markup;
+                return new String[]{name, markup};
             }
             else{
-                JOptionPane.showMessageDialog(null, "Invalid Markup", "", JOptionPane.WARNING_MESSAGE);
-                return getMarkupInput(name, markup);
+                JOptionPane.showMessageDialog(parent, "Invalid Markup", "", JOptionPane.WARNING_MESSAGE);
+                return getMarkupInput(parent, name, markup);
             }
         }
-        return getMarkupInput(name, null);
+        else{
+            return new String[]{};
+        }
     }
     
     private static boolean validateOutput(String markup){

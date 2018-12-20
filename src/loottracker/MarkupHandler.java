@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -50,7 +51,13 @@ public class MarkupHandler {
         public void addMarkup(String name, double markup){
             markupTable.put(name, markup);
         }
-              
+        
+        public void updateMarkup(Vector<Vector<String>> markupData){
+            markupData.forEach((Vector<String> row)->{
+                markupTable.put(row.elementAt(0), Double.parseDouble(row.elementAt(1)) / 100.0);
+            });
+        }
+        
         public void displayMarkup(){
             markupTable.forEach((k, v) -> {
                 System.out.println(k + "\t" + v);

@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -20,16 +22,79 @@ public class LootTracker {
     private Map<String, MobData> huntingData;
     private MarkupHandler markupHandler;
     private int huntsCreated;
-
+    //private Map<EquipmentType, Map<String, Double>> equipmentData;
+    private ArrayList<Equipment> weapons;
+    private ArrayList<Equipment> amps;
+    private ArrayList<Equipment> healingTools;
+    private ArrayList<Equipment> armor;
+    
     public LootTracker() {
         huntsCreated = 0;
-        huntingData = new HashMap<>();
-        //markupHandler = new MarkupHandler(Settings.markupFile);
+        huntingData = new HashMap<>();    
+        initEquipmentData();
         
+        //markupHandler = new MarkupHandler(Settings.markupFile);
     }
+    
+    private void initEquipmentData(){
+        weapons = new ArrayList<>();
+        amps = new ArrayList<>();
+        healingTools = new ArrayList<>();
+        armor = new ArrayList<>();
+    }
+    
+    
     
     public void addMarkupHandler(MarkupHandler markupHandler){
         this.markupHandler = markupHandler;
+    }
+    
+    public ArrayList<Equipment> getWeapons(){
+        return weapons;
+    }
+    
+    public ArrayList<Equipment> getAmps(){
+        return amps;
+    }
+    
+    public ArrayList<Equipment> getHealingTools(){
+        return healingTools;
+    }
+    
+    public ArrayList<Equipment> getArmors(){
+        return armor;
+    }
+    
+    public ArrayList<Equipment> getAllEquipment(){
+        ArrayList<Equipment> result = new ArrayList<>();
+        result.addAll(weapons);
+        result.addAll(amps);
+        result.addAll(healingTools);
+        result.addAll(armor);
+        return result;
+    }
+    
+    public ArrayList<String> getAllNames(String type){
+        switch(type){
+            case "Weapon":
+                return EquipmentUtilities.getAllNames(weapons);
+            case "Amp":
+                return EquipmentUtilities.getAllNames(amps);
+            case "Healing":
+                return EquipmentUtilities.getAllNames(healingTools);
+            case "Armor":
+                return EquipmentUtilities.getAllNames(armor);
+            default:
+                throw new RuntimeException("Invalid type for equipment!");     
+        }
+        
+    }
+    
+    public void clearAllEquipment(){
+        weapons.clear();
+        amps.clear();
+        healingTools.clear();
+        armor.clear();
     }
     
     public int getHuntsCreated(){
@@ -121,6 +186,26 @@ public class LootTracker {
     
     public Map<DataKey, Double> getStatsForGroup(String group) {
         return huntingData.get(group).getDataForHunts(markupHandler);
+    }
+    
+    public Map<DataKey, Double> getStatsForAllGroups() {
+        Map<DataKey, Double> allStats = Utilities.initDataTable();
+        huntingData.values().forEach((MobData d) -> {
+            d.getDataForHunts(markupHandler).forEach((DataKey k, Double v ) ->{
+                if(k != DataKey.ReturnTTpercent && k != DataKey.ReturnWithMarkupPercent){
+                    allStats.merge(k, Utilities.round(v, 2), Double::sum);
+                }
+            });
+        });
+        if(Double.compare(allStats.get(DataKey.TotalCost), 0) > 0){
+            allStats.put(DataKey.ReturnTTpercent, 
+                Utilities.round(100 * allStats.get(DataKey.TotalLootTT) / 
+                allStats.get(DataKey.TotalCost),2));
+            allStats.put(DataKey.ReturnWithMarkupPercent, 
+                Utilities.round(100 * allStats.get(DataKey.TotalLootWithMarkup) / 
+                allStats.get(DataKey.TotalCost),2));
+        }
+        return allStats;
     }
 }
 
