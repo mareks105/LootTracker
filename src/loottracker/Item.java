@@ -33,8 +33,9 @@ public class Item {
 		this.valueTT += value;
 	}
 	
+        
 	public void print() {
 		NumberFormat formatter = new DecimalFormat("#0.00");
-		System.out.format("%-10s\t%-1s\n", this.name, formatter.format(this.valueTT));
+		System.out.format("Name: %-10s\tValue: %-1s\n", this.name, formatter.format(this.valueTT));
 	}
 }

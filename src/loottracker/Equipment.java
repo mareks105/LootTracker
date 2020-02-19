@@ -1,10 +1,13 @@
 package loottracker;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 /**
  *
  * @author mege9
  */
-public abstract class Equipment extends Item {
+public class Equipment extends Item {
 	private double endValue;
         protected EquipmentType type;
 	
@@ -44,5 +47,12 @@ public abstract class Equipment extends Item {
 	
 	public double getDecayWithMarkup(double endValue) {
 		return Utilities.round(getDecayTT(endValue) * this.markup,2);
+	}
+        
+        public void print() {
+		NumberFormat formatter = new DecimalFormat("#0.00");
+		System.out.format("Name: %-10s\tStartValue: %-1s\tMarkup: %-1s\tEndValue: %-1s\n", this.name, 
+                        formatter.format(this.valueTT), formatter.format(this.markup),
+                        formatter.format(this.endValue));
 	}
 }
