@@ -20,9 +20,6 @@ public class MarkupHandler {
                         ObjectMapper mapper = new ObjectMapper();
                         this.markupTable = mapper.readValue(new File(this.markupFile),
                                 new TypeReference<Map<String, Double>>(){});
-                        /*markupTable.forEach((k,v) -> {
-                            System.out.println(k + "\t" + v);
-                        });*/
 		}
 		catch (IOException e) {
 			System.out.println("Markup File not Found!");
@@ -42,8 +39,6 @@ public class MarkupHandler {
 			return markupTable.get(itemName);
 		}
 		else {
-			// No Markup data found
-			//System.out.println("No Markup data found for " + itemName);
 			throw new MarkupHandlerException("No markup for item " + itemName);
 		}
 	}

@@ -1203,7 +1203,6 @@ public class LootTrackerUI extends javax.swing.JFrame {
     private void updateStatisticsPanel(){
         if(this.lootTracker.getHuntingData().size() > 0){
             String group = this.groupSelector.getSelectedItem().toString();
-            System.out.println(group);
             if(this.lootTracker.getGroups().contains(group)){
                 Map<DataKey, Double> statsForGroup = this.lootTracker.getStatsForGroup(group);
                 Utilities.roundData(statsForGroup);
@@ -1653,7 +1652,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
-            public void run() {
+            public void run() {        
                 try {
                     new LootTrackerUI().setVisible(true);
                 } catch (InvalidFormatException | ParseException | InvalidKeyException ex) {

@@ -392,55 +392,7 @@ public class DiskIO {
             parser.nextToken();
         }
         parser.nextToken();
-        /*
-        List<String> types = Arrays.asList("Armor", "Amp", "HealingTool", "Weapon");
-        parser.nextToken();
-        parser.nextToken();
-        
-        for(int i = 0; i < 4; i++){
-            EquipmentType type;
-            switch(i){
-                    case 0:
-                        type = EquipmentType.Armor;
-                        break;
-                    case 1:
-                        type = EquipmentType.Amp;
-                        break;
-                    case 2:
-                        type = EquipmentType.HealingTool;
-                        break;
-                    case 3:
-                        type = EquipmentType.Weapon;
-                        break;
-                    default:
-                        throw new InvalidKeyException("unknown error");
-            }
-            parseEquipmentType(parser, lootTracker, types, type);
-        }*/
-        
     }
-    
-   /* private static void parseEquipmentType(JsonParser parser, LootTracker lootTracker, List<String> types, EquipmentType type) throws IOException{
-        //System.out.println(type);
-        if(parser.getCurrentName().equals("Equipment")){
-            parser.nextToken();
-            
-        }
-        while(parser.getCurrentToken() != JsonToken.END_OBJECT){
-          
-            parser.nextToken();
-            String name = parser.getCurrentName();
-            if(! types.contains(name) && parser.getCurrentToken() != JsonToken.FIELD_NAME){
-                double value = parser.getValueAsDouble();
-                //System.out.print(name + " - ");        
-                //System.out.println(value);
-                lootTracker.addEquipment(type, name, value);
-            }
-        }
-        //System.out.println(parser.getCurrentToken());
-        parser.nextToken();
-        parser.nextToken();
-    }*/
     
     private static void parseMarkupData(JsonParser parser, LootTracker lootTracker) throws IOException{
         Map<String, Double> markupTable = new HashMap<>();

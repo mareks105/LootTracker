@@ -237,6 +237,7 @@ public class Hunt {
         this.dataTable.put(DataKey.ReturnWithMarkup,
                 Utilities.round(this.dataTable.get(DataKey.TotalLootWithMarkup) - 
                         this.dataTable.get(DataKey.TotalCost),2));
+        
         this.dataTable.put(DataKey.ReturnWithMarkupPercent, 
                 Utilities.round(100 * this.dataTable.get(DataKey.TotalLootWithMarkup) / 
                         this.dataTable.get(DataKey.TotalCost),2));

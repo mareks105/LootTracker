@@ -33,7 +33,7 @@ public class LootTracker {
         huntingData = new HashMap<>();    
         initEquipmentData();
         
-        //markupHandler = new MarkupHandler(Settings.markupFile);
+        markupHandler = new MarkupHandler(Settings.markupFile);
     }
     
     private void initEquipmentData(){
@@ -161,11 +161,9 @@ public class LootTracker {
     }
     
     public void removeHunt(String group, int ID){
-        System.out.println("Hunts: " + huntingData.get(group).getHunts().size());
         if(!this.huntingData.get(group).removeHunt(ID)){
             System.out.println("Failed to remove hunt");
         }
-        System.out.println("Hunts After: " + huntingData.get(group).getHunts().size());
         if(huntingData.get(group).getHunts().size() == 0){
             huntingData.remove(group);
         }

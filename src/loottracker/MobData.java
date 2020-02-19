@@ -56,7 +56,7 @@ public class MobData {
                     if(hunt.getEndDate() != null){
                         hunt.getDataForHunt(markupHandler).forEach((DataKey k, Double v) -> {
                             if(k != DataKey.ReturnTTpercent && k != DataKey.ReturnWithMarkupPercent){
-                                dataTable.merge(k, Utilities.round(v,2), Double::sum);
+                                dataTable.merge(k, Utilities.round(v, 2), Double::sum);
                             }
                         });
                     }
@@ -64,10 +64,10 @@ public class MobData {
                 if(Double.compare(dataTable.get(DataKey.TotalCost), 0) > 0){
                     dataTable.put(DataKey.ReturnTTpercent, 
                     Utilities.round(100 * dataTable.get(DataKey.TotalLootTT) / 
-                    dataTable.get(DataKey.TotalCost),2));
+                    dataTable.get(DataKey.TotalCost), 2));
                 dataTable.put(DataKey.ReturnWithMarkupPercent, 
                     Utilities.round(100 * dataTable.get(DataKey.TotalLootWithMarkup) / 
-                    dataTable.get(DataKey.TotalCost),2));
+                    dataTable.get(DataKey.TotalCost), 2));
                 }
 		return dataTable;
 	}
