@@ -33,6 +33,22 @@ public class Item {
 		this.valueTT += value;
 	}
 	
+        @Override
+        public boolean equals(Object v){
+            boolean retVal = false;
+            if(v instanceof Item){
+                Item item = (Item)v;
+                retVal = item.getName().equals(this.name);
+            }
+            return retVal;
+        }
+        
+        @Override
+        public int hashCode(){
+            int hash = 7;
+            hash = 17 * hash + (this.name != null ? this.name.hashCode() : 0);
+            return hash;
+        }
         
 	public void print() {
 		NumberFormat formatter = new DecimalFormat("#0.00");

@@ -15,12 +15,7 @@ import java.util.*;
  * @author mege9
  *
  */
-public class InventoryParser {
-	
-	private Path beforeFile = Paths.get("C:\\Users\\mege9\\Documents\\NetBeansProjects\\LootTracker\\data", "inventoryBefore2.txt");
-	private Path afterFile = Paths.get("C:\\Users\\mege9\\Documents\\NetBeansProjects\\LootTracker\\data", "inventoryAfter2.txt");
-	private Charset charset = Charset.forName("ISO-8859-1");
-        
+public class InventoryParser {        
         List<String> beforeInventory;
         List<String> afterInventory;
         
@@ -30,6 +25,8 @@ public class InventoryParser {
             Value,
             Container
         }
+        
+        public InventoryParser(){}
         
         public void loadInventory(List<String> beforeInventory, List<String> afterInventory){
             this.beforeInventory = beforeInventory;
@@ -61,7 +58,8 @@ public class InventoryParser {
                                     }
                                     else if(compare < 0) {
                                             val = valueBefore - valueAfter;
-                                            decay.add(new Item(l.getName(), val));
+                                            double DEFAULT_MARKUP = 100;
+                                            decay.add(new Equipment(l.getName(), valueBefore, DEFAULT_MARKUP, valueAfter));
                                     }
                                     newItem = false;
                                     break;

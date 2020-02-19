@@ -712,17 +712,47 @@ public class NewRunUI extends javax.swing.JFrame {
         DefaultTableModel lootModel = (DefaultTableModel)this.lootTable.getModel();
         DefaultTableModel equipmentModel = (DefaultTableModel)this.equipmentTable.getModel();
         
-        data.get("Decay").get(0).print();
-        data.get("Loot").get(0).print();
-        
         // Equipment
-//        model.addRow(new Object[]{
-//                equipmentInput[0], 
-//                equipmentInput[1], 
-//                equipmentInput[2], 
-//                equipmentInput[3], 
-//                equipmentInput[4]}
-//            );
+        
+        data.get("Decay").forEach((Item decayItem) ->{
+            Equipment e = (Equipment)decayItem;
+            EquipmentType type;
+            double markup;
+            int index = this.lootTracker.getAllEquipment().indexOf(e);
+            if(index != -1){
+                type = this.lootTracker.getAllEquipment().get(index).getType();
+                markup = this.lootTracker.getAllEquipment().get(index).getMarkup();
+            }
+            else{
+                type = EquipmentType.UNKNOWN;
+                markup = e.getMarkup();
+            }
+            
+            equipmentModel.addRow(new Object[]{
+                e.getName(), 
+                type,
+                Double.toString(e.getValue()), 
+                Double.toString(e.getEndValue()),
+                Double.toString(markup)}
+            );
+        });
+        
+        data.get("Loot").forEach((loot) ->{
+            String[] markupData = new String[2];
+            try{
+                markupData[1] = Double.toString(this.lootTracker.getMarkupHandler().getMarkup(loot.getName()) * 100);
+                markupData[0] = loot.getName();
+            }
+            catch(MarkupHandlerException e){
+                markupData = MarkupParser.getMarkupInput((JFrame)this, loot.getName(), null);
+                this.lootTracker.getMarkupHandler().addMarkup(loot.getName(), Double.parseDouble(markupData[1]) / 100);
+            }
+            lootModel.addRow(new Object[]{
+            loot.getName(),
+            Double.toString(loot.getValue()),
+            markupData[1]});
+        });
+
         
     }//GEN-LAST:event_updateRunButtonActionPerformed
     
@@ -777,6 +807,8 @@ public class NewRunUI extends javax.swing.JFrame {
         }
         
         String note = this.noteField.getText();
+        String inventoryBefore = this.inventoryBeforeField.getText();
+        String inventoryAfter = this.inventoryAfterField.getText();
         int result = JOptionPane.showConfirmDialog((JFrame)this, null, "Are you sure?", JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
         if(result == JOptionPane.YES_OPTION){
             Hunt hunt = new Hunt(ammo, universalAmmo, lootData, equipmentData, note, lootTracker.getMarkupHandler());

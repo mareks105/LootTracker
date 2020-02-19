@@ -47,6 +47,10 @@ public class MarkupHandler {
             markupTable.put(name, markup);
         }
         
+        public void removeMarkup(String name){
+            markupTable.remove(name);
+        }
+        
         public void updateMarkup(Vector<Vector<String>> markupData){
             markupData.forEach((Vector<String> row)->{
                 markupTable.put(row.elementAt(0), Double.parseDouble(row.elementAt(1)) / 100.0);

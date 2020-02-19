@@ -30,6 +30,8 @@ public class InventoryParserTest {
     private Path beforeFile = Paths.get("C:\\Users\\mege9\\Documents\\NetBeansProjects\\LootTracker\\test\\data", "testInventoryBefore.txt");
     private Path afterFile = Paths.get("C:\\Users\\mege9\\Documents\\NetBeansProjects\\LootTracker\\test\\data", "testInventoryAfter.txt");
     private Charset charset = Charset.forName("ISO-8859-1");
+    private MarkupHandler markupHandler = new MarkupHandler(
+        "C:\\Users\\mege9\\Documents\\NetBeansProjects\\LootTracker\\data\\markup_info.txt");
     
     @Before
     public void setUpClass() {
@@ -58,7 +60,8 @@ public class InventoryParserTest {
         // Decay
         assertTrue(changesForHunt.get("Decay").size() == 1);// One item with decay
         assertTrue("ArMatrix LR-20 (L)".equals(changesForHunt.get("Decay").get(0).name));
-        assertTrue(changesForHunt.get("Decay").get(0).valueTT == 4.0);
+        assertTrue(changesForHunt.get("Decay").get(0).valueTT == 24.33);
+        assertTrue(((Equipment)changesForHunt.get("Decay").get(0)).getEndValue() == 20.33);
         
         // Loot
         assertTrue(changesForHunt.get("Loot").size() == 1);// One piece of loot

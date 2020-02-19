@@ -20,7 +20,10 @@ public class MarkupParser {
     public static String[] getMarkupInput(JFrame parent, String name, String oldMarkup){
         JPanel panel = new JPanel();
         JTextField nameField = new JTextField(name);
-        nameField.setEditable(false);
+        if(name == null){
+            nameField.setColumns(15);
+        }
+        nameField.setEditable(true);
         if(oldMarkup == null){
             oldMarkup = "100";
         }

@@ -13,5 +13,6 @@ public enum EquipmentType {
     Weapon,
     Amp,
     HealingTool,
-    Armor
+    Armor,
+    UNKNOWN
 }

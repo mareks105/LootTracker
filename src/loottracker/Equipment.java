@@ -49,6 +49,23 @@ public class Equipment extends Item {
 		return Utilities.round(getDecayTT(endValue) * this.markup,2);
 	}
         
+        @Override
+        public boolean equals(Object v){
+            boolean retVal = false;
+            if(v instanceof Equipment){
+                Equipment e = (Equipment)v;
+                retVal = e.getName().equals(this.name);
+            }
+            return retVal;
+        }
+        
+        @Override
+        public int hashCode(){
+            int hash = 7;
+            hash = 17 * hash + (this.name != null ? this.name.hashCode() : 0);
+            return hash;
+        }
+        
         public void print() {
 		NumberFormat formatter = new DecimalFormat("#0.00");
 		System.out.format("Name: %-10s\tStartValue: %-1s\tMarkup: %-1s\tEndValue: %-1s\n", this.name, 
