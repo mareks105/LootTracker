@@ -1,5 +1,8 @@
 package loottracker;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -71,4 +74,25 @@ public class MobData {
                 }
 		return dataTable;
 	}
+        
+        public void saveToDisk(JsonGenerator generator, DateFormat df) throws IOException {
+            generator.writeArrayFieldStart("loot");
+            for(String s : this.reportedLootForMob){
+                generator.writeString(s);
+            }
+            generator.writeEndArray();
+            generator.writeNumberField("nrHunts", this.hunts.size());
+            generator.writeArrayFieldStart("hunts");
+            for (Map.Entry<Integer, Hunt> huntEntry : this.hunts.entrySet()) {
+                generator.writeStartObject();
+                generator.writeNumberField("huntID", huntEntry.getKey());
+                // Write Data for Hunt
+                Hunt hunt = huntEntry.getValue();
+                hunt.saveToDisk(generator, df);
+            }
+            // End of all MobData Hunts
+            generator.writeEndArray();
+            // End of MobData object
+            generator.writeEndObject();
+        }
 }

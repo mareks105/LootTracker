@@ -1,5 +1,8 @@
 package loottracker;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import java.io.IOException;
+
 public class Loot extends Item {
 	private boolean isSold = false;
 	
@@ -17,9 +20,15 @@ public class Loot extends Item {
 		this.markup = markup;
 		isSold = true;
 	}
-	
 		
 	public boolean isSold() {
 		return isSold;
 	}
+        
+        public void saveToDisk(JsonGenerator generator) throws IOException {
+            generator.writeStartObject();
+            generator.writeStringField("name", this.name);
+            generator.writeNumberField("valueTT", this.valueTT);
+            generator.writeEndObject();
+        }
 }

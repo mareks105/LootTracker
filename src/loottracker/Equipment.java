@@ -1,5 +1,7 @@
 package loottracker;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -72,4 +74,14 @@ public class Equipment extends Item {
                         formatter.format(this.valueTT), formatter.format(this.markup),
                         formatter.format(this.endValue));
 	}
+        
+        public void saveToDisk(JsonGenerator generator) throws IOException {
+            generator.writeStartObject();
+            generator.writeStringField("name", this.name);
+            generator.writeStringField("type", EquipmentUtilities.getTypeForEquipment(this));
+            generator.writeNumberField("valueTT", this.valueTT);
+            generator.writeNumberField("markup", this.markup);
+            generator.writeNumberField("endValue", this.endValue);
+            generator.writeEndObject();
+        }
 }

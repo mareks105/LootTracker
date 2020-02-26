@@ -1,6 +1,9 @@
 package loottracker;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.io.IOException;
+import java.text.DateFormat;
 import java.util.*;
 import java.util.stream.DoubleStream;
 
@@ -12,7 +15,12 @@ public class Hunt {
     private Date endDate;
     private String note;
     
-    public Hunt(double ammo, double universalAmmo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note, MarkupHandler markupHandler){
+    public Hunt(double ammo,
+                double universalAmmo,
+                Vector<Vector<String>> lootData,
+                Vector<Vector<String>> equipmentData,
+                String note,
+                MarkupHandler markupHandler){
         // Init Fields in Hunt
         this.endDate = null;
         this.dataTable = Utilities.initDataTable();
@@ -265,5 +273,35 @@ public class Hunt {
             this.dataTable.put(DataKey.Markup,
                     Utilities.round(this.dataTable.get(DataKey.TotalLootWithMarkup) -
                             this.dataTable.get(DataKey.TotalLootTT),2));
-    }    
+    }
+    
+    public void saveToDisk(JsonGenerator generator, DateFormat df) throws IOException {
+        generator.writeArrayFieldStart("allLoot");
+        for (Loot loot : this.allLoot) {
+            loot.saveToDisk(generator);
+        }
+        generator.writeEndArray();
+        
+        generator.writeArrayFieldStart("allEquipment");
+        for (Equipment e : this.allEquipment) {
+            e.saveToDisk(generator);
+        }
+        generator.writeEndArray();
+
+        generator.writeObjectFieldStart("dataTable");
+        for (Map.Entry<DataKey, Double> dataEntry : this.dataTable.entrySet()) {
+            generator.writeNumberField(dataEntry.getKey().toString(), dataEntry.getValue());
+        }
+        generator.writeEndObject();
+        if(this.endDate == null){
+            generator.writeStringField("endDate", "null");
+        }
+        else{
+            generator.writeStringField("endDate", df.format(this.endDate));
+        }
+
+        generator.writeStringField("note", this.note);
+        // End Hunt Data
+        generator.writeEndObject();
+    }
 }
