@@ -5,6 +5,13 @@
  */
 package loottracker;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -204,6 +211,52 @@ public class LootTracker {
                 allStats.get(DataKey.TotalCost),2));
         }
         return allStats;
+    }
+    
+    public void saveToDisk(DateFormat df) throws IOException {
+        JsonFactory factory = new JsonFactory();
+        JsonGenerator generator = factory.createGenerator(new File(Settings.dataFile), JsonEncoding.UTF8);
+        generator.writeStartObject();
+        saveHuntingDataToJson(generator, this.huntingData, df);
+        saveEquipmentDataToJson(generator, this.getAllEquipment());
+        saveMarkupHandlerToJson(generator);
+        generator.writeEndObject();
+        generator.close();
+        ObjectMapper mapper = new ObjectMapper();
+        Object json = mapper.readValue(new File(Settings.dataFile), Object.class);
+        mapper.writerWithDefaultPrettyPrinter().writeValue(new File(Settings.dataFile), json);
+    }
+    
+    private static void saveHuntingDataToJson(JsonGenerator generator, 
+            Map<String, MobData> huntingData, 
+            DateFormat df) throws IOException {
+        generator.writeObjectFieldStart("huntingData");
+        generator.writeNumberField("nrGroups", huntingData.size());
+        for (Map.Entry<String, MobData> entry : huntingData.entrySet()) {
+            generator.writeObjectFieldStart(entry.getKey());
+            MobData mobData = entry.getValue();
+            mobData.saveToDisk(generator, df);
+            // End of MobData object
+            generator.writeEndObject();
+        }
+        // Finished writing the huntingData to json
+        generator.writeEndObject();
+    }
+    
+    private static void saveEquipmentDataToJson(JsonGenerator generator, ArrayList<Equipment> equipmentData) throws IOException {
+        generator.writeArrayFieldStart("allEquipment");
+        for (Equipment e : equipmentData) {
+            e.saveToDisk(generator);
+        }
+        generator.writeEndArray();    
+    }
+    
+    private void saveMarkupHandlerToJson(JsonGenerator generator) throws IOException {
+        generator.writeObjectFieldStart("markupHandler");
+        generator.writeObjectFieldStart("markupTable");
+        this.markupHandler.saveToDisk(generator);
+        generator.writeEndObject();
+        generator.writeEndObject();
     }
 }
 

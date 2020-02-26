@@ -1300,7 +1300,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
                 "Are you sure?", "Confirm Close", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
             try {
-                DiskIO.saveLootTracker(this.lootTracker, df);
+                this.lootTracker.saveToDisk(df);
                 System.exit(0);
             } catch (IOException ex) {
                 System.out.println("Failed to save data: " + ex.getMessage());

@@ -36,110 +36,6 @@ public class DiskIO {
             super(message);
         }
     }
-    public static void saveLootTracker(LootTracker lootTracker, DateFormat df) throws IOException {
-        JsonFactory factory = new JsonFactory();
-        JsonGenerator generator = factory.createGenerator(new File(Settings.dataFile), JsonEncoding.UTF8);
-        generator.writeStartObject();
-        saveHuntingDataToJson(generator, lootTracker, df);
-        saveEquipmentDataToJson(generator, lootTracker.getAllEquipment());
-        saveMarkupHandlerToJson(generator, lootTracker.getMarkupHandler());
-        generator.writeEndObject();
-        generator.close();
-        ObjectMapper mapper = new ObjectMapper();
-        Object json = mapper.readValue(new File(Settings.dataFile), Object.class);
-        mapper.writerWithDefaultPrettyPrinter().writeValue(new File(Settings.dataFile), json);
-    }
-
-    private static void saveHuntingDataToJson(JsonGenerator generator, 
-            LootTracker lootTracker, 
-            DateFormat df) throws IOException {
-        Map<String, MobData> huntingData = lootTracker.getHuntingData();
-        int huntsCreated = lootTracker.getHuntsCreated();
-        generator.writeObjectFieldStart("huntingData");
-        generator.writeNumberField("nrGroups", huntingData.size());
-        for (Map.Entry<String, MobData> entry : huntingData.entrySet()) {
-            generator.writeObjectFieldStart(entry.getKey());
-            generator.writeArrayFieldStart("loot");
-            for(String s : entry.getValue().getReportedLootForGroup()){
-                generator.writeString(s);
-            }
-            generator.writeEndArray();
-            generator.writeNumberField("nrHunts", entry.getValue().getHunts().size());
-            generator.writeArrayFieldStart("hunts");
-            Map<Integer, Hunt> hunts = entry.getValue().getHunts();
-            for (Map.Entry<Integer, Hunt> huntEntry : hunts.entrySet()) {
-                generator.writeStartObject();
-                generator.writeNumberField("huntID", huntsCreated);
-                // Write Data for Hunt
-                Hunt hunt = huntEntry.getValue();
-                generator.writeArrayFieldStart("allLoot");
-                for (Loot loot : hunt.getLoot()) {
-                    generator.writeStartObject();
-                    generator.writeStringField("name", loot.getName());
-                    generator.writeNumberField("valueTT", loot.getValue());
-                    generator.writeEndObject();
-                }
-                generator.writeEndArray();
-                generator.writeArrayFieldStart("allEquipment");
-                for (Equipment e : hunt.getEquipment()) {
-                    generator.writeStartObject();
-                    generator.writeStringField("name", e.getName());
-                    generator.writeStringField("type", EquipmentUtilities.getTypeForEquipment(e));
-                    generator.writeNumberField("valueTT", e.getValue());
-                    generator.writeNumberField("markup", e.getMarkup());
-                    generator.writeNumberField("endValue", e.getEndValue());
-                    generator.writeEndObject();
-                }
-                generator.writeEndArray();
-
-                generator.writeObjectFieldStart("dataTable");
-                for (Map.Entry<DataKey, Double> dataEntry : hunt.getDataTable().entrySet()) {
-                    generator.writeNumberField(dataEntry.getKey().toString(), dataEntry.getValue());
-                }
-                generator.writeEndObject();
-                if(hunt.getEndDate() == null){
-                    generator.writeStringField("endDate", "null");
-                }
-                else{
-                    generator.writeStringField("endDate", df.format(hunt.getEndDate()));
-                }
-                
-                generator.writeStringField("note", hunt.getNote());
-                // End Hunt Data
-                generator.writeEndObject();
-            }
-            // End of all MobData Hunts
-            generator.writeEndArray();
-            // End of MobData object
-            generator.writeEndObject();
-        }
-        // Finished writing the huntingData to json
-        generator.writeEndObject();
-    }
-    
-    private static void saveEquipmentDataToJson(JsonGenerator generator, ArrayList<Equipment> equipmentData) throws IOException {
-        generator.writeArrayFieldStart("allEquipment");
-        for (Equipment e : equipmentData) {
-            generator.writeStartObject();
-            generator.writeStringField("name", e.getName());
-            generator.writeStringField("type", EquipmentUtilities.getTypeForEquipment(e));
-            generator.writeNumberField("valueTT", e.getValue());
-            generator.writeNumberField("markup", e.getMarkup());
-            generator.writeEndObject();
-        }
-        generator.writeEndArray();
-        
-    }
-    
-    private static void saveMarkupHandlerToJson(JsonGenerator generator, MarkupHandler markupHandler) throws IOException {
-        generator.writeObjectFieldStart("markupHandler");
-        generator.writeObjectFieldStart("markupTable");
-        for (Map.Entry<String, Double> entry : markupHandler.getMarkupTable().entrySet()) {
-            generator.writeNumberField(entry.getKey(), entry.getValue());
-        }
-        generator.writeEndObject();
-        generator.writeEndObject();
-    }
     
     public static LootTracker loadDataFromFile(DateFormat df) throws IOException, InvalidFormatException, ParseException, InvalidKeyException{
         LootTracker lootTracker = new LootTracker();
@@ -372,6 +268,12 @@ public class DiskIO {
             double markup = parser.getValueAsDouble();
             if(Settings.DEBUG){
                 System.out.println("markup: "  + markup);
+            }
+            parser.nextToken();
+            parser.nextToken();
+            double endValue = parser.getValueAsDouble();
+            if(Settings.DEBUG){
+                System.out.println("endValue: "  + endValue);
             }
             switch(type){
                 case "Weapon":
