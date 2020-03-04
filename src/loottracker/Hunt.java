@@ -153,12 +153,12 @@ public class Hunt {
      * @param date: The current date when the hunt ended.
      */
     public void end(Date date) {
-            if(date == null){
-                this.endDate = new Date();
-            }
-            else{
-                this.endDate = date;
-            }       
+        if(date == null){
+            this.endDate = new Date();
+        }
+        else{
+            this.endDate = date;
+        }       
     }
 
     public Date getEndDate(){
@@ -232,9 +232,9 @@ public class Hunt {
     }
 
     public Map<DataKey, Double> getDataForHunt(MarkupHandler markupHandler){
-            getLootWithMarkup(markupHandler);
-            getReturnWithMarkup();
-            return this.dataTable;
+        getLootWithMarkup(markupHandler);
+        getReturnWithMarkup();
+        return this.dataTable;
     }
     
     public String getNote(){
@@ -257,26 +257,26 @@ public class Hunt {
 
     private void getLootWithMarkup(MarkupHandler markupHandler) {
 
-            this.dataTable.put(DataKey.TotalLootWithMarkup,
-                    Utilities.round(allLoot.stream()
-                    .filter((item) -> (item instanceof Loot))
-                    .map((item) -> (Loot) item)
-                    .map((loot) -> {
-                                double markup;
-                                if(loot.isSold()){
-                                    markup = loot.getMarkup();
-                                }
-                                else{
-                                    markup = markupHandler.getMarkup(loot.getName());
-                                }
-                                return loot.getValue() * markup;
-                            })
-                    .mapToDouble((entry) -> (double) entry)
-                    .sum(),2)
-            );
-            this.dataTable.put(DataKey.Markup,
-                    Utilities.round(this.dataTable.get(DataKey.TotalLootWithMarkup) -
-                            this.dataTable.get(DataKey.TotalLootTT),2));
+        this.dataTable.put(DataKey.TotalLootWithMarkup,
+                Utilities.round(allLoot.stream()
+                .filter((item) -> (item instanceof Loot))
+                .map((item) -> (Loot) item)
+                .map((loot) -> {
+                            double markup;
+                            if(loot.isSold()){
+                                markup = loot.getMarkup();
+                            }
+                            else{
+                                markup = markupHandler.getMarkup(loot.getName());
+                            }
+                            return loot.getValue() * markup;
+                        })
+                .mapToDouble((entry) -> (double) entry)
+                .sum(),2)
+        );
+        this.dataTable.put(DataKey.Markup,
+                Utilities.round(this.dataTable.get(DataKey.TotalLootWithMarkup) -
+                        this.dataTable.get(DataKey.TotalLootTT),2));
     }
     
     public void saveToDisk(JsonGenerator generator, DateFormat df) throws IOException {

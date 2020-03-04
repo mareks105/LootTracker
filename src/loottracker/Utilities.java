@@ -18,10 +18,20 @@ public class Utilities {
         return dataTable;
     }
     
+    /**
+     * Rounds all the values in the data table to two decimals
+     * @param dataTable
+     */
     public static void roundData(Map<loottracker.DataKey, Double> dataTable) {
         dataTable.replaceAll((k, v) -> round(v,2));
     }
 	
+    /**
+     *
+     * @param key
+     * @return key as a DataKey type
+     * @throws InvalidKeyException
+     */
     public static DataKey getDataKey(String key) throws InvalidKeyException{
         switch(key){
             case "Ammo":
@@ -77,6 +87,12 @@ public class Utilities {
         return bd.doubleValue();
     }
     
+    /**
+     * Get index of item with specific name in list of items
+     * @param allItems
+     * @param name
+     * @return
+     */
     public static int getItemIndex(ArrayList<Item> allItems, String name) {
         for(int i = 0; i < allItems.size(); ++i) {
                 if(allItems.get(i).getName().equals(name)) {
