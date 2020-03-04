@@ -8,16 +8,12 @@ package loottracker;
 import java.awt.CardLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -25,11 +21,9 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import DiskIO.DiskIO;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import java.security.InvalidKeyException;
 import java.text.ParseException;
-import javax.swing.ComboBoxModel;
 
 /**
  *
@@ -47,7 +41,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
         this.lootTracker = new LootTracker();
         UtilitiesUI.showFrameOnScreen(this, 2);
         try {
-            this.lootTracker = DiskIO.loadDataFromFile(df);
+            this.lootTracker.loadFromDisk(df, Settings.dataFile);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog((JFrame)this, "Failed to load data!", "Error Message", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();

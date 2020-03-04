@@ -15,5 +15,5 @@ public class Settings {
     public static String markupFile = "C:\\Users\\mege9\\Documents\\NetBeansProjects\\LootTracker\\data\\markup_info.txt";
     public static String dataFile = "C:\\Users\\mege9\\Documents\\NetBeansProjects\\LootTracker\\data\\lootTracker_data.json"; 
     public static Charset charset = Charset.forName("ISO-8859-1");
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 }

@@ -8,18 +8,21 @@ package loottracker;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  *
@@ -150,6 +153,11 @@ public class LootTracker {
         return huntingData.get(group);
     }
     
+    public void addMobData(MobData data, String group){
+        this.huntsCreated += data.getHunts().size();
+        this.huntingData.put(group, data);
+    }
+    
     public ArrayList<String> getReportedLootForGroup(String group){
         if(huntingData.containsKey(group)){
             return huntingData.get(group).getReportedLootForGroup();
@@ -243,7 +251,7 @@ public class LootTracker {
         generator.writeEndObject();
     }
     
-    private static void saveEquipmentDataToJson(JsonGenerator generator, ArrayList<Equipment> equipmentData) throws IOException {
+    private void saveEquipmentDataToJson(JsonGenerator generator, ArrayList<Equipment> equipmentData) throws IOException {
         generator.writeArrayFieldStart("allEquipment");
         for (Equipment e : equipmentData) {
             e.saveToDisk(generator);
@@ -257,6 +265,102 @@ public class LootTracker {
         this.markupHandler.saveToDisk(generator);
         generator.writeEndObject();
         generator.writeEndObject();
+    }
+    
+    public void loadFromDisk(DateFormat df, String file) throws IOException, ParseException, InvalidKeyException {
+        JsonFactory factory = new JsonFactory();
+        JsonParser parser = factory.createParser(new File(file));
+        parser.nextToken();
+        parser.nextToken();
+        parser.nextToken();
+        this.loadHuntingDataFromJson(parser, df);
+        this.loadEquipmentDataFromJson(parser);
+        this.markupHandler.loadFromJson(parser);
+    }
+    
+    private void loadHuntingDataFromJson(JsonParser parser, DateFormat df) throws IOException, ParseException, InvalidKeyException{
+        parser.nextToken();
+        parser.nextToken();
+        int nrGroups = parser.getValueAsInt();
+        if(Settings.DEBUG){
+            System.out.println("groups: " + nrGroups);
+        }
+        for(int i = 0; i < nrGroups; i++){
+            parser.nextToken();
+            parser.nextToken();
+            String group = parser.getCurrentName();
+            if(Settings.DEBUG){
+                System.out.println(group);
+            }
+            MobData data = new MobData();
+            data.loadFromDisk(parser, df, this.huntsCreated);
+            this.addMobData(data, group);
+        }
+        parser.nextToken();
+    }
+    
+    private void loadEquipmentDataFromJson(JsonParser parser) throws IOException {
+        parser.nextToken();
+        parser.nextToken();
+        if(Settings.DEBUG){
+            System.out.println(parser.getCurrentToken());
+            System.out.println(parser.getCurrentName());
+        }
+        while(parser.nextToken() != JsonToken.END_ARRAY){
+            if(Settings.DEBUG){
+                System.out.println(parser.getCurrentToken());
+                System.out.println(parser.getCurrentName());
+            }
+            parser.nextToken();
+            parser.nextToken();
+            String name = parser.getValueAsString();
+            if(Settings.DEBUG){
+                System.out.println("name: " + name);
+            }
+            parser.nextToken();
+            parser.nextToken();
+
+            String type = parser.getValueAsString();
+            if(Settings.DEBUG){
+                System.out.println("type: " + type);
+            }
+            parser.nextToken();
+            parser.nextToken();
+            double valueTT = parser.getValueAsDouble();
+            if(Settings.DEBUG){
+                System.out.println("valueTT: "  + valueTT);
+            }
+            parser.nextToken();
+            parser.nextToken();
+            double markup = parser.getValueAsDouble();
+            if(Settings.DEBUG){
+                System.out.println("markup: "  + markup);
+            }
+            parser.nextToken();
+            parser.nextToken();
+            double endValue = parser.getValueAsDouble();
+            if(Settings.DEBUG){
+                System.out.println("endValue: "  + endValue);
+            }
+            switch(type){
+                case "Weapon":
+                    this.weapons.add(new Weapon(name, valueTT, markup));
+                    break;
+                case "Amp":
+                    this.amps.add(new Amp(name, valueTT, markup));
+                    break;
+                case "Healing":
+                    this.healingTools.add(new HealingTool(name, valueTT, markup));
+                    break;
+                case "Armor":
+                    this.armor.add(new Armor(name, valueTT, markup));
+                    break;
+                default:
+                    throw new InvalidFormatException("Unknown equipment type found: " + type, null, null);
+            }
+            parser.nextToken();
+        }
+        parser.nextToken();
     }
 }
 

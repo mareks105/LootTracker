@@ -1,9 +1,13 @@
 package loottracker;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.DoubleStream;
 
@@ -301,5 +305,124 @@ public class Hunt {
         }
 
         generator.writeStringField("note", this.note);
+    }
+    
+    public void parseFromJson(JsonParser parser, DateFormat df) throws IOException, InvalidKeyException, ParseException {
+        parser.nextToken();
+        parser.nextToken();
+        // parse Loot
+        while(parser.nextToken() != JsonToken.END_ARRAY){
+            addLootFromJson(parser);
+        }
+        parser.nextToken();
+        parser.nextToken();
+        // parse Equipment
+        while(parser.nextToken() != JsonToken.END_ARRAY){
+            addEquipmentFromJson(parser);
+        }
+        parser.nextToken();
+
+        parser.nextToken();
+        updateDataTableFromJson(parser);
+        parser.nextToken();
+        parser.nextToken();
+        parser.nextToken();
+        String date = parser.getValueAsString();
+        if( ! date.equals("null")){
+            Date endDate = df.parse(parser.getValueAsString());
+            if(Settings.DEBUG){
+                System.out.println(endDate);
+            }
+            this.end(endDate);
+        }
+        
+        parser.nextToken();
+        parser.nextToken();
+        String note = parser.getValueAsString();
+        this.setNote(note);
+    }
+    
+    private void addLootFromJson(JsonParser parser) throws IOException {
+        parser.nextToken();
+        parser.nextToken();
+        String name = parser.getValueAsString();
+        if(Settings.DEBUG){
+            System.out.println("name: " + name);
+        }
+        parser.nextToken();
+        parser.nextToken();
+        double valueTT = parser.getValueAsDouble();
+        if(Settings.DEBUG){
+            System.out.println("value: " + valueTT);
+        }
+        this.addLoot(new Loot(name, valueTT));
+        parser.nextToken();
+    }
+    
+    private void addEquipmentFromJson(JsonParser parser) throws IOException {
+        parser.nextToken();
+        parser.nextToken();
+        String name = parser.getValueAsString();
+        if(Settings.DEBUG){
+            System.out.println("name: " + name);
+        }
+        parser.nextToken();
+        parser.nextToken();
+        
+        String type = parser.getValueAsString();
+        if(Settings.DEBUG){
+            System.out.println("type: " + type);
+        }
+        parser.nextToken();
+        parser.nextToken();
+        double valueTT = parser.getValueAsDouble();
+        if(Settings.DEBUG){
+            System.out.println("valueTT: "  + valueTT);
+        }
+        parser.nextToken();
+        parser.nextToken();
+        double markup = parser.getValueAsDouble();
+        if(Settings.DEBUG){
+            System.out.println("markup: "  + markup);
+        }
+        parser.nextToken();
+        parser.nextToken();
+        double endValue = parser.getValueAsDouble();
+        if(Settings.DEBUG){
+            System.out.println("endValue: "  + endValue);
+        }
+        switch(type){
+            case "Weapon":
+                this.addEquipment(new Weapon(name, valueTT, markup, endValue));
+                break;
+            case "Amp":
+                this.addEquipment(new Amp(name, valueTT, markup, endValue));
+                break;
+            case "Healing":
+                this.addEquipment(new Amp(name, valueTT, markup, endValue));
+                break;
+            case "Armor":
+                this.addEquipment(new Amp(name, valueTT, markup, endValue));
+                break;
+            default:
+                throw new InvalidFormatException("Unknown equipment type found: " + type, null, null);
+        }
+        parser.nextToken();
+    }
+    
+    private void updateDataTableFromJson(JsonParser parser) throws IOException, InvalidKeyException {
+        if(Settings.DEBUG){
+            System.out.println(parser.getCurrentName());
+            System.out.println(parser.getCurrentToken());
+        }
+        for(int i = 0; i < 20; i++){
+            parser.nextToken();
+            parser.nextToken();
+            if(Settings.DEBUG){
+                System.out.println(parser.getCurrentToken());
+                System.out.println(parser.getCurrentName());
+            }
+            this.dataTable.put(Utilities.getDataKey(parser.getCurrentName()), parser.getValueAsDouble());
+        }
     }
 }

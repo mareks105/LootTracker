@@ -1,10 +1,13 @@
 package loottracker;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,5 +98,38 @@ public class MobData {
             }
             // End of all MobData Hunts
             generator.writeEndArray();
+        }
+        
+        public void loadFromDisk(JsonParser parser, DateFormat df, int huntsCreated) throws IOException, InvalidKeyException, ParseException {
+            parser.nextToken();
+            parser.nextToken();
+            ArrayList<String> lootForGroup = new ArrayList<>();
+            while(parser.nextToken() != JsonToken.END_ARRAY){
+                lootForGroup.add(parser.getValueAsString());
+            }
+            this.setReportedLootForGroup(lootForGroup);
+            parser.nextToken();
+            parser.nextToken();
+
+            int nrHunts = parser.getValueAsInt();
+            if(Settings.DEBUG){
+                System.out.println(parser.getCurrentToken());
+                System.out.println("nrHunts: " + nrHunts);
+            }
+            parser.nextToken();
+            // Parse all hunts for MobData object
+            parser.nextToken();
+            parser.nextToken();
+            parser.nextToken();
+
+            for(int j = huntsCreated; j < huntsCreated + nrHunts; j++){
+                parser.nextToken();
+                Hunt hunt = new Hunt();
+                hunt.parseFromJson(parser, df);
+                this.addHunt(j, hunt);
+                parser.nextToken();
+                parser.nextToken();
+                parser.nextToken();
+            }
         }
 }

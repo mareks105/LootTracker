@@ -1,6 +1,8 @@
 package loottracker;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class MarkupHandler {
     
@@ -67,6 +68,18 @@ public class MarkupHandler {
     public void saveToDisk(JsonGenerator generator) throws IOException {
         for (Map.Entry<String, Double> entry : this.markupTable.entrySet()) {
             generator.writeNumberField(entry.getKey(), entry.getValue());
+        }
+    }
+    
+    public void loadFromJson(JsonParser parser) throws IOException{
+        parser.nextToken();
+        while(parser.nextToken() != JsonToken.END_OBJECT){
+            parser.nextToken();
+            String name = parser.getCurrentName();
+            if(!name.equals("markupTable")){
+                double markup = parser.getValueAsDouble();
+                this.markupTable.put(name, markup);
+            }
         }
     }
 }
