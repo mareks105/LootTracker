@@ -188,8 +188,17 @@ public class LootTracker {
         return huntingData.get(group).getHunt(ID).getDataForHunt(markupHandler);
     }
     
-    public void updateHunt(String group, int ID, double ammo, double universalAmmo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note){
-        huntingData.get(group).getHunt(ID).updateHunt(ammo, universalAmmo, lootData, equipmentData, note, this.markupHandler);
+    public void updateHunt(
+            String group,
+            int ID,
+            double ammo,
+            double universalAmmo,
+            Vector<Vector<String>> lootData,
+            Vector<Vector<String>> equipmentData,
+            String note,
+            String inventoryBeforeRun,
+            String inventoryAfterRun){
+        huntingData.get(group).getHunt(ID).updateHunt(ammo, universalAmmo, lootData, equipmentData, note, this.markupHandler, inventoryBeforeRun, inventoryAfterRun);
     }
     
     

@@ -18,17 +18,21 @@ public class Hunt {
     private Map<DataKey, Double> dataTable;
     private Date endDate;
     private String note;
+    private String inventoryBefore;
+    private String inventoryAfter;
     
     public Hunt(double ammo,
                 double universalAmmo,
                 Vector<Vector<String>> lootData,
                 Vector<Vector<String>> equipmentData,
                 String note,
-                MarkupHandler markupHandler){
+                MarkupHandler markupHandler,
+                String inventoryBefore,
+                String inventoryAfter){
         // Init Fields in Hunt
         this.endDate = null;
         this.dataTable = Utilities.initDataTable();
-        updateHunt(ammo, universalAmmo, lootData, equipmentData, note, markupHandler);
+        updateHunt(ammo, universalAmmo, lootData, equipmentData, note, markupHandler, inventoryBefore, inventoryAfter);
     }
     
     public Hunt(){
@@ -51,7 +55,15 @@ public class Hunt {
         computeReturnTT();
     }
     
-    public void updateHunt(double ammo, double universalAmmo, Vector<Vector<String>> lootData, Vector<Vector<String>> equipmentData, String note, MarkupHandler markupHandler){
+    public void updateHunt(
+            double ammo,
+            double universalAmmo,
+            Vector<Vector<String>> lootData,
+            Vector<Vector<String>> equipmentData,
+            String note,
+            MarkupHandler markupHandler,
+            String inventoryBefore,
+            String inventoryAfter){
         this.allLoot = new ArrayList<>();
         this.allEquipment = new ArrayList<>();
         this.dataTable = Utilities.initDataTable();
@@ -60,6 +72,8 @@ public class Hunt {
         this.dataTable.put(DataKey.Ammo, ammo);
         this.dataTable.put(DataKey.UniversalAmmo, universalAmmo);
         this.note = note;
+        this.inventoryBefore = inventoryBefore;
+        this.inventoryAfter = inventoryAfter;
         computeDecayForEquipment();
         computeLootTT();
         computeTotalCost();
@@ -279,6 +293,22 @@ public class Hunt {
                         this.dataTable.get(DataKey.TotalLootTT),2));
     }
     
+    public String getInventoryBefore(){
+        return this.inventoryBefore;
+    }
+    
+    public void setInventoryBefore(String inventoryBefore){
+        this.inventoryBefore = inventoryBefore;
+    }
+    
+    public String getInventoryAfter(){
+        return this.inventoryAfter;
+    }
+    
+    public void setInventoryAfter(String inventoryAfter){
+        this.inventoryAfter = inventoryAfter;
+    }
+    
     public void saveToDisk(JsonGenerator generator, DateFormat df) throws IOException {
         generator.writeArrayFieldStart("allLoot");
         for (Loot loot : this.allLoot) {
@@ -305,6 +335,8 @@ public class Hunt {
         }
 
         generator.writeStringField("note", this.note);
+        generator.writeStringField("inventoryBefore", this.inventoryBefore);
+        generator.writeStringField("inventoryAfter", this.inventoryAfter);
     }
     
     public void parseFromJson(JsonParser parser, DateFormat df) throws IOException, InvalidKeyException, ParseException {
@@ -340,6 +372,22 @@ public class Hunt {
         parser.nextToken();
         String note = parser.getValueAsString();
         this.setNote(note);
+        parser.nextToken();
+        parser.nextToken();
+        if(Settings.DEBUG){
+            System.out.println(parser.getCurrentToken());
+            System.out.println(parser.getCurrentName());
+        }
+        String inventoryBefore = parser.getValueAsString();
+        this.setInventoryBefore(inventoryBefore);
+        parser.nextToken();
+        parser.nextToken();
+        if(Settings.DEBUG){
+            System.out.println(parser.getCurrentToken());
+            System.out.println(parser.getCurrentName());
+        }
+        String inventoryAfter = parser.getValueAsString();
+        this.setInventoryAfter(inventoryAfter);
     }
     
     private void addLootFromJson(JsonParser parser) throws IOException {

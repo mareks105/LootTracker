@@ -752,8 +752,6 @@ public class NewRunUI extends javax.swing.JFrame {
             Double.toString(loot.getValue()),
             markupData[1]});
         });
-
-        
     }//GEN-LAST:event_updateRunButtonActionPerformed
     
     private void saveDataForHunt(boolean end){
@@ -811,7 +809,7 @@ public class NewRunUI extends javax.swing.JFrame {
         String inventoryAfter = this.inventoryAfterField.getText();
         int result = JOptionPane.showConfirmDialog((JFrame)this, null, "Are you sure?", JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
         if(result == JOptionPane.YES_OPTION){
-            Hunt hunt = new Hunt(ammo, universalAmmo, lootData, equipmentData, note, lootTracker.getMarkupHandler());
+            Hunt hunt = new Hunt(ammo, universalAmmo, lootData, equipmentData, note, lootTracker.getMarkupHandler(), inventoryBefore, inventoryAfter);
             if(end){
                 hunt.end(new Date());
                 EquipmentUtilities.addEquipmentToSettingsFromData(lootTracker, equipmentData);
