@@ -1739,19 +1739,38 @@ public class LootTrackerUI extends javax.swing.JFrame {
         
         double ammo;
         double universalAmmo;
+        boolean noAmmo = false;
+        boolean noUniversalAmmo = false;
         
         if(Utilities.validateString(this.ammoField.getText(), true)){
-            ammo = Double.parseDouble(this.ammoField.getText());
+            if(this.ammoField.getText().isEmpty()){
+                ammo = 0.0;
+                noAmmo = true;
+            }
+            else{
+                ammo = Double.parseDouble(this.ammoField.getText());
+            }
         }
         else{
             JOptionPane.showMessageDialog((JFrame)this, "Invalid Ammo!", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         if(Utilities.validateString(this.universalAmmoField.getText(), true)){
-            universalAmmo = Double.parseDouble(this.universalAmmoField.getText());
+            if(this.universalAmmoField.getText().isEmpty()){
+                universalAmmo = 0.0;
+                noUniversalAmmo = true;
+            }
+            else{
+                universalAmmo = Double.parseDouble(this.universalAmmoField.getText());
+            }
         }
         else{
             JOptionPane.showMessageDialog((JFrame)this, "Invalid Universal Ammo!", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if(noUniversalAmmo && noAmmo){
+            JOptionPane.showMessageDialog((JFrame)this, "No Ammo entered!", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         

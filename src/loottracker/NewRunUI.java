@@ -781,7 +781,6 @@ public class NewRunUI extends javax.swing.JFrame {
             else{
                 ammo = Double.parseDouble(this.ammoField.getText());
             }
-            
         }
         else{
             JOptionPane.showMessageDialog((JFrame)this, "Invalid Ammo!", "Warning", JOptionPane.WARNING_MESSAGE);
