@@ -43,7 +43,13 @@ public class InventoryParser {
 	private Map<String, ArrayList<Item>> getInventoryChanges(ArrayList<Item> itemsBeforeHunt, ArrayList<Item> itemsAfterHunt){
             ArrayList<Item> loot = new ArrayList<>();
             ArrayList<Item> decay = new ArrayList<>();
+            ArrayList<Item> ammo = new ArrayList<>();
             ArrayList<String> usedItems = new ArrayList<>();
+            itemsBeforeHunt.forEach((item) -> {
+                if(item.getName().equals("Universal Ammo") || item.getName().equals("Ammo")){
+                    ammo.add(new Item(item.getName(), item.getValue()));
+                }
+            });
             for (Item l : itemsAfterHunt) {
                     double val = l.getValue();
                     boolean newItem = true;
@@ -57,9 +63,14 @@ public class InventoryParser {
                                             loot.add(new Loot(l.getName(), val));
                                     }
                                     else if(compare < 0) {
+                                        double DEFAULT_MARKUP = 100;
+                                        if(k.getName().equals("Universal Ammo") || k.getName().equals("Ammo")){
+                                            loot.add(new Loot(k.getName(), valueAfter));
+                                        }
+                                        else{
                                             val = valueBefore - valueAfter;
-                                            double DEFAULT_MARKUP = 100;
                                             decay.add(new Equipment(l.getName(), valueBefore, DEFAULT_MARKUP, valueAfter));
+                                        }
                                     }
                                     newItem = false;
                                     break;
@@ -74,6 +85,7 @@ public class InventoryParser {
             Map<String, ArrayList<Item>> result = new HashMap();
             result.put("Loot", loot);
             result.put("Decay", decay);
+            result.put("Ammo", ammo);
             return result;
 	}
 	// List<String> lines = Files.readAllLines(file, this.charset);

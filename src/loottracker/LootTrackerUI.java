@@ -1659,6 +1659,15 @@ public class LootTrackerUI extends javax.swing.JFrame {
             Double.toString(loot.getValue()),
             markupData[1]});
         });
+        
+        data.get("Ammo").forEach((ammo) ->{
+            if(ammo.getName().equals("Universal Ammo")){
+                universalAmmoField.setText(Double.toString(ammo.getValue()));
+            }
+            else if(ammo.getName().equals("Ammo")){
+                ammoField.setText(Double.toString(ammo.getValue()));
+            }
+        });
     }//GEN-LAST:event_updateTablesButtonActionPerformed
     
     private void showSettingsPanel(){
