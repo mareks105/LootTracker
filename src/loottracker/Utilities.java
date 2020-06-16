@@ -81,8 +81,16 @@ public class Utilities {
 
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
+        //System.out.println("here:");
+        //System.out.println(value);
+        BigDecimal bd = new BigDecimal(0);
+        try{
+             bd = new BigDecimal(value);
+        }
+        catch(Exception e){
+            System.out.println(value);
+        }
+            
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }

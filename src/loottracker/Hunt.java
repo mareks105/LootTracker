@@ -260,13 +260,19 @@ public class Hunt {
     }
     
     private void getReturnWithMarkup(){
-        this.dataTable.put(DataKey.ReturnWithMarkup,
+        double totalCost = this.dataTable.get(DataKey.TotalCost);
+        if(totalCost > 0){
+            this.dataTable.put(DataKey.ReturnWithMarkup,
                 Utilities.round(this.dataTable.get(DataKey.TotalLootWithMarkup) - 
-                        this.dataTable.get(DataKey.TotalCost),2));
-        
-        this.dataTable.put(DataKey.ReturnWithMarkupPercent, 
-                Utilities.round(100 * this.dataTable.get(DataKey.TotalLootWithMarkup) / 
-                        this.dataTable.get(DataKey.TotalCost),2));
+                        totalCost,2));
+            this.dataTable.put(DataKey.ReturnWithMarkupPercent, 
+                    Utilities.round(100 * this.dataTable.get(DataKey.TotalLootWithMarkup) / 
+                            totalCost,2));
+        }
+        else{
+            this.dataTable.put(DataKey.ReturnWithMarkup, 0.0);
+            this.dataTable.put(DataKey.ReturnWithMarkupPercent, 0.0);
+        }        
     }
 
     private void getLootWithMarkup(MarkupHandler markupHandler) {

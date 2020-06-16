@@ -712,9 +712,9 @@ public class NewRunUI extends javax.swing.JFrame {
         DefaultTableModel lootModel = (DefaultTableModel)this.lootTable.getModel();
         DefaultTableModel equipmentModel = (DefaultTableModel)this.equipmentTable.getModel();
         
-        // Equipment
-        
+        // Equipment       
         data.get("Decay").forEach((Item decayItem) ->{
+            String[] equipmentData;
             Equipment e = (Equipment)decayItem;
             EquipmentType type;
             double markup;
@@ -722,18 +722,32 @@ public class NewRunUI extends javax.swing.JFrame {
             if(index != -1){
                 type = this.lootTracker.getAllEquipment().get(index).getType();
                 markup = this.lootTracker.getAllEquipment().get(index).getMarkup();
+                equipmentData = new String[]{
+                    e.getName(),
+                    type.toString(),
+                    Double.toString(e.getValue()),
+                    Double.toString(e.getEndValue()),
+                    Double.toString(markup)
+                };
             }
             else{
-                type = EquipmentType.UNKNOWN;
-                markup = e.getMarkup();
+                equipmentData = EquipmentParser.getEquipmentInput(
+                        (JFrame)this,
+                        this.lootTracker,
+                        e.getName(),
+                        null,
+                        Double.toString(e.getValue()),
+                        Double.toString(e.getEndValue()),
+                        Double.toString(e.getMarkup()),
+                        true
+                );
             }
-            
             equipmentModel.addRow(new Object[]{
-                e.getName(), 
-                type,
-                Double.toString(e.getValue()), 
-                Double.toString(e.getEndValue()),
-                Double.toString(markup)}
+                equipmentData[0], 
+                equipmentData[1],
+                equipmentData[2], 
+                equipmentData[3],
+                equipmentData[4]}
             );
         });
         

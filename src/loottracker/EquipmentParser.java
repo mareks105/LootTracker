@@ -129,6 +129,116 @@ public class EquipmentParser {
             return new String[]{};
         }
     }
+    
+    public static String[] getEquipmentInput(JFrame parent, LootTracker lootTracker, String newName, String oldType, String oldStart, String oldEnd, String oldMarkup, boolean newEquipment){
+        JTextField startField = new JTextField(oldStart);
+        JTextField markupField = new JTextField(oldMarkup);
+        JTextField endField = new JTextField(oldEnd);
+        String[] types = {"Weapon", "Amp", "Healing", "Armor"};
+        JComboBox<String> typeSelector = new JComboBox<>(types);
+        JComboBox nameSelector;
+        if(oldType != null){
+            typeSelector.setSelectedItem(oldType);
+        }
+        String type = typeSelector.getSelectedItem().toString();
+        nameSelector = new JComboBox(lootTracker.getAllNames(type).toArray());
+        String name = nameSelector.getSelectedItem().toString();
+        Equipment e = EquipmentUtilities.getEquipmentByName(name, lootTracker.getAllEquipment());
+        if(oldStart == null && oldEnd == null){
+            startField.setText(Double.toString(e.getValue()));
+            endField.setText(Double.toString(e.getValue()));
+        }
+        if(oldMarkup == null){
+            markupField.setText(Double.toString(e.getMarkup() * 100));
+        }
+        
+        typeSelector.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent event){
+                String newType = (String) typeSelector.getSelectedItem();
+                
+                nameSelector.removeAllItems();
+                ArrayList<String> names = lootTracker.getAllNames(newType);
+                names.forEach(name ->{
+                    nameSelector.addItem(name);
+                });  
+            }
+        });
+        String[] output = new String[5];
+        
+        // Function is called for new equipments
+        newName = JOptionPane.showInputDialog(parent, "Name", newName);
+        if(Utilities.validateString(newName, false)){
+            nameSelector.addItem(newName);
+            nameSelector.setSelectedItem(newName);
+            markupField.setText("100");
+        }
+        
+        JButton newButton = new JButton("New");
+        newButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String newName = JOptionPane.showInputDialog(parent, "Name");
+                if(Utilities.validateString(newName, false)){
+                    nameSelector.addItem(newName);
+                    nameSelector.setSelectedItem(newName);
+                    markupField.setText("100");
+                }
+            }
+        });
+        
+        nameSelector.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent ie) {
+                String name = (String) nameSelector.getSelectedItem();
+                if(name != null){
+                    Equipment e = EquipmentUtilities.getEquipmentByName(name, lootTracker.getAllEquipment());
+                    if(e != null){
+                        startField.setText(Double.toString(e.getValue()));
+                        endField.setText(Double.toString(e.getValue()));
+                        markupField.setText(Double.toString(e.getMarkup() * 100));
+                    }
+                    else{
+                        startField.setText("");
+                        markupField.setText("100");
+                    }
+                }
+            }
+        });
+        
+        
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(typeSelector);
+        panel.add(new JLabel("Name;"));
+        panel.add(nameSelector);
+        panel.add(newButton);
+        panel.add(new JLabel("Start Value:"));
+        panel.add(startField);
+        panel.add(new JLabel("End Value:"));
+        panel.add(endField);
+        panel.add(new JLabel("Markup:"));
+        panel.add(markupField);
+        int result = JOptionPane.showConfirmDialog(parent, panel, "Add Equipment",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if( result == JOptionPane.OK_OPTION){
+            output[0] = (String)nameSelector.getSelectedItem();
+            output[1] = (String)typeSelector.getSelectedItem();
+            output[2] = startField.getText();
+            output[3] = endField.getText();
+            output[4] = markupField.getText();
+            if(validateOutput(output)){
+                return output;
+            }
+            else{
+                JOptionPane.showMessageDialog(parent, "Invalid Data", "", JOptionPane.WARNING_MESSAGE);
+                return getEquipmentInput(parent, lootTracker, output[0], output[1], output[2], output[3], output[4]);
+            }
+            
+        }
+        else{
+            return new String[]{};
+        }
+    }
      
     public static String[] getEquipmentInputSettings(JFrame parent, String oldName, String oldType, String oldValue, String oldMarkup){
         String[] types = {"Weapon", "Amp", "Healing", "Armor"};

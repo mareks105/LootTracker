@@ -1635,7 +1635,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
                     type.toString(),
                     Double.toString(e.getValue()),
                     Double.toString(e.getEndValue()),
-                    Double.toString(markup)
+                    Double.toString(100 * markup)
                 };
             }
             else{
@@ -1646,7 +1646,8 @@ public class LootTrackerUI extends javax.swing.JFrame {
                         null,
                         Double.toString(e.getValue()),
                         Double.toString(e.getEndValue()),
-                        Double.toString(e.getMarkup())
+                        Double.toString(100 * e.getMarkup()),
+                        true
                 );
             }
             equipmentModel.addRow(new Object[]{
