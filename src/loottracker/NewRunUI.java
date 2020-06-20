@@ -768,10 +768,10 @@ public class NewRunUI extends javax.swing.JFrame {
         });
         
         data.get("Ammo").forEach((ammo) ->{
-            if(ammo.getName().equals("Universal Ammo")){
+            if(ammo.getName().equals(AmmoType.UniversalAmmo.toString())){
                 universalAmmoField.setText(Double.toString(ammo.getValue()));
             }
-            else if(ammo.getName().equals("Ammo")){
+            else if(ammo.getName().equals(AmmoType.WeaponCells.toString()) || ammo.getName().equals(AmmoType.BLP.toString())){
                 ammoField.setText(Double.toString(ammo.getValue()));
             }
         });

@@ -46,7 +46,7 @@ public class InventoryParser {
             ArrayList<Item> ammo = new ArrayList<>();
             ArrayList<String> usedItems = new ArrayList<>();
             itemsBeforeHunt.forEach((item) -> {
-                if(item.getName().equals("Universal Ammo") || item.getName().equals("Ammo") || item.getName().equals("Weapon Cells")){
+                if(AmmoUtilities.IsAmmo(item)){
                     ammo.add(new Item(item.getName(), item.getValue()));
                 }
             });
@@ -64,7 +64,7 @@ public class InventoryParser {
                                     }
                                     else if(compare < 0) {
                                         double DEFAULT_MARKUP = 100;
-                                        if(k.getName().equals("Universal Ammo") || k.getName().equals("Ammo") || k.getName().equals("Weapon Cells")){
+                                        if(AmmoUtilities.IsAmmo(k)){
                                             loot.add(new Loot(k.getName(), valueAfter));
                                         }
                                         else{
