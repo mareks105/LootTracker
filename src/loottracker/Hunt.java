@@ -278,7 +278,6 @@ public class Hunt {
     }
 
     private void getLootWithMarkup(MarkupHandler markupHandler) {
-
         this.dataTable.put(DataKey.TotalLootWithMarkup,
                 Utilities.round(allLoot.stream()
                 .filter((item) -> (item instanceof Loot))
