@@ -26,6 +26,7 @@ import java.awt.Component;
 import java.security.InvalidKeyException;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.TreeMap;
 import javax.swing.JPanel;
 
 /**
@@ -53,15 +54,22 @@ public class LootTrackerUI extends javax.swing.JFrame {
         }
         initComponents();
         initDataTables();
-        displayDataFromLootTracker();
+        initInterfaceFromLootTracker();
     }
     
-    private void displayDataFromLootTracker(){
+    private void initInterfaceFromLootTracker(){
         this.groupSelector.addItem("All");
-        this.lootTracker.getHuntingData().forEach((String group, MobData data) -> {
+        Map<String, MobData> sortedHuntingData = new TreeMap<>(this.lootTracker.getHuntingData());
+        sortedHuntingData.forEach((String group, MobData data) -> {
             this.groupSelector.addItem(group);
             this.mobSelector.addItem(group);
-            data.getHunts().forEach((Integer ID, Hunt hunt) -> {
+            addDataForGroupToDataTable(group, data);
+        });
+        updateStatisticsPanel();
+    }
+    
+    private void addDataForGroupToDataTable(String group, MobData data){
+        data.getHunts().forEach((Integer ID, Hunt hunt) -> {
                 DefaultTableModel dataTableModel = (DefaultTableModel)this.dataTable.getModel();
                 Map<DataKey, Double> huntData = hunt.getDataForHunt(this.lootTracker.getMarkupHandler());
                 dataTableModel.addRow(new Object[]{
@@ -77,7 +85,6 @@ public class LootTrackerUI extends javax.swing.JFrame {
                     hunt.getNote()
                 });
             });
-        });
     }
     
     private void initDataTables(){
@@ -314,6 +321,8 @@ public class LootTrackerUI extends javax.swing.JFrame {
         totalCostField = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         ammoStatField = new javax.swing.JTextField();
+        markupScoreField = new javax.swing.JFormattedTextField();
+        markupScoreLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel7 = new javax.swing.JPanel();
         overviewButton = new javax.swing.JButton();
@@ -947,6 +956,11 @@ public class LootTrackerUI extends javax.swing.JFrame {
         totalMarkupField.setEditable(false);
 
         returnTTField.setEditable(false);
+        returnTTField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnTTFieldActionPerformed(evt);
+            }
+        });
 
         returnTTpercentField.setEditable(false);
         returnTTpercentField.addActionListener(new java.awt.event.ActionListener() {
@@ -1001,6 +1015,11 @@ public class LootTrackerUI extends javax.swing.JFrame {
 
         ammoStatField.setEditable(false);
 
+        markupScoreField.setEditable(false);
+
+        markupScoreLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        markupScoreLabel1.setText("MarkupScore");
+
         javax.swing.GroupLayout totalDataPanelLayout = new javax.swing.GroupLayout(totalDataPanel);
         totalDataPanel.setLayout(totalDataPanelLayout);
         totalDataPanelLayout.setHorizontalGroup(
@@ -1008,8 +1027,8 @@ public class LootTrackerUI extends javax.swing.JFrame {
             .addGroup(totalDataPanelLayout.createSequentialGroup()
                 .addGap(3, 3, 3)
                 .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
                     .addComponent(jLabel8)
+                    .addComponent(jLabel7)
                     .addComponent(jLabel6))
                 .addGap(18, 18, 18)
                 .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -1017,46 +1036,38 @@ public class LootTrackerUI extends javax.swing.JFrame {
                     .addComponent(healingField)
                     .addComponent(weaponField))
                 .addGap(10, 10, 10)
-                .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(totalDataPanelLayout.createSequentialGroup()
-                        .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(armorField, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-                            .addComponent(ammoStatField)))
-                    .addGroup(totalDataPanelLayout.createSequentialGroup()
-                        .addComponent(totalCostLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(totalCostField, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(totalCostLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(armorField, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
+                        .addComponent(ammoStatField))
+                    .addComponent(totalCostField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-                .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(totalMarkupLabel)
+                .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(totalLootLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(totalMarkupLabel)
                     .addComponent(returnTTLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(totalLootTTField, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
                     .addComponent(returnTTField, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(totalMarkupField, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(18, 18, 18)
                 .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(totalDataPanelLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(totalDataPanelLayout.createSequentialGroup()
-                                .addComponent(returnTTPercentLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(returnTTpercentField, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(totalDataPanelLayout.createSequentialGroup()
-                                .addComponent(returnMarkupPercentLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(returnMarkupPercent, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, totalDataPanelLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(returnMarkupLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(returnMarkupField, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(returnMarkupLabel)
+                    .addComponent(returnTTPercentLabel)
+                    .addComponent(returnMarkupPercentLabel)
+                    .addComponent(markupScoreLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(markupScoreField, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(returnMarkupPercent, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(returnMarkupField, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(returnTTpercentField, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21))
             .addGroup(totalDataPanelLayout.createSequentialGroup()
                 .addContainerGap()
@@ -1067,6 +1078,15 @@ public class LootTrackerUI extends javax.swing.JFrame {
                 .addComponent(groupSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(136, 136, 136))
         );
+
+        totalDataPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {markupScoreField, returnMarkupField, returnMarkupPercent, returnTTpercentField});
+
+        totalDataPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {returnTTField, totalLootTTField, totalMarkupField});
+
+        totalDataPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ammoStatField, armorField, totalCostField});
+
+        totalDataPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ampField, healingField, weaponField});
+
         totalDataPanelLayout.setVerticalGroup(
             totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(totalDataPanelLayout.createSequentialGroup()
@@ -1112,7 +1132,11 @@ public class LootTrackerUI extends javax.swing.JFrame {
                             .addComponent(returnTTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(returnMarkupPercentLabel)
                             .addComponent(returnMarkupPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(760, 760, 760))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(totalDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(markupScoreField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(markupScoreLabel1))
+                .addGap(734, 734, 734))
         );
 
         overviewButton.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -1186,7 +1210,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
                     .addComponent(overviewButton)
                     .addComponent(detailsButton)
                     .addComponent(settingsButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1212,9 +1236,9 @@ public class LootTrackerUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(totalDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(totalDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 601, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1304,8 +1328,25 @@ public class LootTrackerUI extends javax.swing.JFrame {
     }//GEN-LAST:event_newMobButtonActionPerformed
 
     private void groupSelectorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_groupSelectorItemStateChanged
-        updateStatisticsPanel();        
+        updateStatisticsPanel();
+        clearDataTable();
+        addDataToTable();
     }//GEN-LAST:event_groupSelectorItemStateChanged
+    
+    private void clearDataTable() {
+        DefaultTableModel model = (DefaultTableModel) this.dataTable.getModel();
+        model.setRowCount(0);
+    }
+    
+    private void addDataToTable(){
+        Map<String, MobData> sortedHuntingData = new TreeMap<>(this.lootTracker.getHuntingData());
+        String selectedMob = this.groupSelector.getSelectedItem().toString();
+        sortedHuntingData.forEach((String group, MobData data) -> {
+            if (selectedMob.equals("All") || selectedMob.equals(group)){
+                addDataForGroupToDataTable(group, data);
+            }
+        });
+    }
     
     private void updateStatisticsPanel(){
         if(this.lootTracker.getHuntingData().size() > 0){
@@ -1339,6 +1380,7 @@ public class LootTrackerUI extends javax.swing.JFrame {
         this.returnTTpercentField.setText(statsForGroup.get(DataKey.ReturnTTpercent).toString());
         this.returnMarkupPercent.setText(statsForGroup.get(DataKey.ReturnWithMarkupPercent).toString());
         this.ammoStatField.setText(Double.toString(Utilities.round(statsForGroup.get(DataKey.Ammo) + statsForGroup.get(DataKey.UniversalAmmo), 2)));
+        this.markupScoreField.setText(statsForGroup.get(DataKey.MarkupScore).toString());
     }
     
     private void setDefaultStatistics(){
@@ -1684,6 +1726,10 @@ public class LootTrackerUI extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_updateTablesButtonActionPerformed
+
+    private void returnTTFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnTTFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_returnTTFieldActionPerformed
     
     private void showSettingsPanel(){
         prepareSettingsPanel();
@@ -1718,11 +1764,12 @@ public class LootTrackerUI extends javax.swing.JFrame {
     }
     
     private void addMarkupDataToSettingsPanel(Map<String, Double> markupData){
+        Map<String, Double> sortedMarkupData = new TreeMap<>(markupData);
         DefaultTableModel tableModel = (DefaultTableModel)this.markupTable.getModel();
         tableModel.getDataVector().removeAllElements();
         revalidate();
         
-        markupData.forEach((String name, Double markup)->{
+        sortedMarkupData.forEach((String name, Double markup)->{
             tableModel.addRow(new Object[]{
                 name,
                 Double.toString(Utilities.round(100 * markup, 2))
@@ -1955,6 +2002,8 @@ public class LootTrackerUI extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable lootTable;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JFormattedTextField markupScoreField;
+    private javax.swing.JLabel markupScoreLabel1;
     private javax.swing.JTable markupTable;
     private javax.swing.JComboBox<String> mobSelector;
     private javax.swing.JButton newMobButton;

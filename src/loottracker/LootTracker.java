@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  *
@@ -81,6 +82,7 @@ public class LootTracker {
         result.addAll(amps);
         result.addAll(healingTools);
         result.addAll(armor);
+        result.sort(Comparator.comparing(Equipment::getName));
         return result;
     }
     

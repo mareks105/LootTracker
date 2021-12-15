@@ -74,6 +74,8 @@ public class Utilities {
                 return DataKey.ReturnWithMarkup;
             case "ReturnWithMarkupPercent":
                 return DataKey.ReturnWithMarkupPercent;
+            case "MarkupScore":
+                return DataKey.MarkupScore;
             default:
                 throw new InvalidKeyException("unknown data key: " + key);
         }

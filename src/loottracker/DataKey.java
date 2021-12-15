@@ -18,6 +18,7 @@ public enum DataKey {
     TotalLootTT,
     TotalLootWithMarkup,
     Markup,
+    MarkupScore,
     ReturnTT,
     ReturnTTpercent,
     ReturnWithMarkup,

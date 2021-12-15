@@ -2,6 +2,7 @@ package loottracker;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import java.io.IOException;
+import java.util.Comparator;
 
 public class Loot extends Item {
     private boolean isSold = false;

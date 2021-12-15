@@ -95,6 +95,7 @@ public class Hunt {
     }
 
     public ArrayList<Equipment> getEquipment(){
+        allEquipment.sort(Comparator.comparing(Equipment::getName));
         return allEquipment;
     }
 
@@ -103,6 +104,7 @@ public class Hunt {
     }
 
     public ArrayList<Loot> getLoot(){
+        allLoot.sort(Comparator.comparing(Loot::getName));
         return allLoot;
     }
 
@@ -362,6 +364,8 @@ public class Hunt {
 
         parser.nextToken();
         updateDataTableFromJson(parser);
+        parser.nextToken();
+        parser.nextToken();
         parser.nextToken();
         parser.nextToken();
         parser.nextToken();

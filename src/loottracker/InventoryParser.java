@@ -55,6 +55,8 @@ public class InventoryParser {
                     boolean newItem = true;
                     for (Item k : itemsBeforeHunt) {
                             if(l.getName().equals(k.getName())) {
+                                    System.out.println(k.getName());
+                                    System.out.println(l.getName());
                                     double valueBefore = k.getValue();
                                     double valueAfter = l.getValue();
                                     int compare = Double.compare(valueAfter, valueBefore);

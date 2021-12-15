@@ -79,6 +79,8 @@ public class MobData {
         dataTable.put(DataKey.ReturnWithMarkupPercent, 
             Utilities.round(100 * dataTable.get(DataKey.TotalLootWithMarkup) / 
             dataTable.get(DataKey.TotalCost), 2));
+        dataTable.put(DataKey.MarkupScore,
+                dataTable.get(DataKey.Markup) / dataTable.get(DataKey.TotalCost));
         }
         return dataTable;
     }

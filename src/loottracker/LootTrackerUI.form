@@ -52,10 +52,10 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="totalDataPanel" min="-2" pref="127" max="-2" attributes="0"/>
                   <Component id="jPanel7" max="32767" attributes="0"/>
+                  <Component id="totalDataPanel" pref="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jSeparator1" min="-2" pref="8" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="mainPanel" min="-2" pref="601" max="-2" attributes="0"/>
@@ -1109,69 +1109,55 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="ampField" alignment="0" pref="85" max="32767" attributes="0"/>
-                      <Component id="healingField" max="32767" attributes="0"/>
-                      <Component id="weaponField" max="32767" attributes="0"/>
+                      <Component id="ampField" linkSize="4" alignment="0" pref="85" max="32767" attributes="0"/>
+                      <Component id="healingField" linkSize="4" max="32767" attributes="0"/>
+                      <Component id="weaponField" linkSize="4" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel11" min="-2" pref="61" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="armorField" pref="72" max="32767" attributes="0"/>
-                              <Component id="ammoStatField" max="32767" attributes="0"/>
-                          </Group>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel11" alignment="0" min="-2" pref="61" max="-2" attributes="0"/>
+                      <Component id="totalCostLabel" alignment="0" min="-2" pref="63" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="armorField" linkSize="3" pref="72" max="32767" attributes="0"/>
+                          <Component id="ammoStatField" linkSize="3" max="32767" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="totalCostLabel" min="-2" pref="63" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="totalCostField" min="-2" pref="73" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="totalCostField" linkSize="3" alignment="1" min="-2" pref="73" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="19" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="totalMarkupLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="totalLootLabel" alignment="0" max="32767" attributes="0"/>
+                      <Component id="totalMarkupLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="returnTTLabel" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="totalLootTTField" pref="71" max="32767" attributes="0"/>
-                      <Component id="returnTTField" alignment="1" max="32767" attributes="0"/>
-                      <Component id="totalMarkupField" alignment="1" max="32767" attributes="0"/>
+                      <Component id="totalLootTTField" linkSize="2" pref="71" max="32767" attributes="0"/>
+                      <Component id="returnTTField" linkSize="2" alignment="1" max="32767" attributes="0"/>
+                      <Component id="totalMarkupField" linkSize="2" alignment="1" max="32767" attributes="0"/>
                   </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="returnTTPercentLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="returnTTpercentField" min="-2" pref="77" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="returnMarkupPercentLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="returnMarkupPercent" min="-2" pref="79" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                          <Component id="returnMarkupLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="returnMarkupField" min="-2" pref="77" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="returnMarkupLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="returnTTPercentLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="returnMarkupPercentLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="markupScoreLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="markupScoreField" linkSize="1" min="-2" pref="79" max="-2" attributes="0"/>
+                      <Component id="returnMarkupPercent" linkSize="1" min="-2" pref="79" max="-2" attributes="0"/>
+                      <Component id="returnMarkupField" linkSize="1" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
+                      <Component id="returnTTpercentField" linkSize="1" min="-2" pref="77" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               </Group>
@@ -1241,7 +1227,12 @@
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="760" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="markupScoreField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="markupScoreLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="734" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -1301,6 +1292,9 @@
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="returnTTFieldActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="returnTTpercentField">
           <Properties>
@@ -1429,6 +1423,19 @@
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JFormattedTextField" name="markupScoreField">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="markupScoreLabel1">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="11" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="MarkupScore"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
@@ -1472,7 +1479,7 @@
                       <Component id="detailsButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="settingsButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="41" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
